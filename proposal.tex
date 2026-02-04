@@ -52,20 +52,14 @@ The core pitch-shifting algorithm will depend on several important parameters. A
 and the choice between time-domain and frequency-domain analysis methods \cite{tang2024efficient}. 
 Notable algorithmic candidates for this project include the phase vocoder, constant-Q time-frequency analysis, and auto-correlation-based approaches.
 
-% Functinally, this program will be a small component in a larger software ecosystem. It will be used alongside other plugins, effects and amps
-% and will be contained within a DAW. The DAW acts as a hosting application that contains the signal chain, a series of components that the signal 
-% passes through before reaching the amp, which in turn contains the pitch shifter plugin. This is a very common setup for both amature and professional
-% musicians and will allow for musicians to change their guitar tuning in real-time
 
-
-
-When you use an image, such as in Figure~\ref{fig:method}, refer to it in the text.
+%When you use an image, such as in Figure~\ref{fig:method}, refer to it in the text.
 
 \begin{figure}[h]
 \centering
 \includegraphics[width=\textwidth,height=0.6\textheight,keepaspectratio]{imgs/plugin.png}
 \caption{Proposed plugin design. It consists of a dial used to adjust the pitch of the input signal
-as well as a visualizer to view the modified signal in real time}
+as well as a visualizer to view the modified signal in real time. The graph's units are Hertz on the y-axis and magnitude along the x-axis}
 \label{fig:method}
 \end{figure}
 
