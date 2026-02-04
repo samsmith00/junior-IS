@@ -57,7 +57,7 @@ Notable algorithmic candidates for this project include the phase vocoder, const
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=\textwidth,height=0.6\textheight,keepaspectratio]{imgs/plugin.png}
+\includegraphics[width=\textwidth,height=0.69\textheight,keepaspectratio]{imgs/plugin.png}
 \caption{Proposed plugin design. It consists of a dial used to adjust the pitch of the input signal
 as well as a visualizer to view the modified signal in real time. The graph's units are Hertz on the y-axis and magnitude along the x-axis.}
 \label{fig:method}
@@ -72,13 +72,19 @@ as well as a visualizer to view the modified signal in real time. The graph's un
 	\item The user can change the pitch of the guitar signal using a semitone control dial.
     \item The pitch is updated in real time as the dial is turned.
     \item The modified guitar signal is audible through an amplifier in real-time.
-    \item The plugin supports both upward (uptune) and downward (detune) pitch shifting.
+    \item The plugin supports both upward (up-tune) and downward (detune) pitch shifting.
     \item The visualizer accurately reflects the frequency content of the modified guitar signal.
     \item The visualizer updates in real time as the user changes the pitch.
     \item The dial’s position visually indicates the current pitch shift value.
     \item The plugin processes polyphonic input, allowing chords and multiple notes to be pitch-shifted simultaneously.
     \item The plugin runs as a VST/AU effect inside a digital audio workstation.
     \item The plugin maintains an acceptable audio quality 
+\end{itemize}
+
+\subsection*{Stretch Goals}
+\begin{itemize}
+	\item Implement an additional offline mode
+	\item Implement a blend mode that blends two pitches
 \end{itemize}
 
 
