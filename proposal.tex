@@ -26,19 +26,31 @@ Today, traditional amps and effect pedals have been overtaken by virtual amplifi
 are now competing with highly technical and lucrative software companies that specialize in music production software \cite{rana2024influence}. The purpose of this project
 is to design and implement a high-demand audio plugin for modern music production software. 
 
-The plugin in question is a pitch shifter, a widely used effect that digitally alters an input signal in real time. 
+The plugin in question is a pitch shifter, a widely used effect that digitally modifies an input signal in real time. 
 Its core functionality is to increase or decrease the input signal’s pitch by algorithmically altering every
 frequency component in a signal \cite{rai2019analysis}. More importantly, it allows for a guitar player to quickly change the 
-tune of their guitar. This solves the common problem of a guitar player wanting to player a particular song in a certin tuning 
-(typically a lower tuning) but their guitar does not support said tuning. Thus, the pitch shifter solves this problem by digitally
-modifying their guitar signal to their desired tuning before reaching their amp. 
+tuning of their guitar. This solves the common problem of a guitar player wanting to play a particular song in a certin tuning 
+but their guitar does not support said tuning. Thus, the pitch shifter solves this problem by digitally modifying the guitar signal 
+to the desired tuning before it reaches the amplifier. This is especially useful for guitarists who want to detune their instrument (tune the guitar to a lower pitch). 
+Before detuning a guitar, one must consider a number of physical factors, such as the strings’ gauge (thickness), 
+the width of the nut, and the length and tension of the neck. If even one of these factors does not support a major detuning, 
+the guitar cannot be safely or effectively retuned. A pitch shifter removes these physical limitations by solving the tuning problem 
+through a purely software-based approach.
 
-Although pitch-shifting effects already exist in both pedal and plugin form,
-their widespread use and high degree of customizability make this a worthwhile and technically meaningful project to pursue.
-The plugin will have a simple interface that abstracts much of the complicated logic and mathematics underneath. The program's 
-GUI will be a dial that represents the semitone change the user desiers. Additionally, a live view of the incoming signal will be 
-displayed so that the user understands how exactly they are modifying their guitar signal.
 
+Although pitch-shifting effects already exist in both pedal and plugin form, their widespread use and high degree of customizability 
+make this a worthwhile and technically meaningful project to pursue. The plugin will have a simple interface that abstracts much of the 
+complicated signal-processing logic and mathematics that occur behind the scenes. The program’s graphical user interface (GUI) will feature a dial that 
+represents the semitone shift applied to the signal. Positive values will indicate an increase in pitch (uptuning), while negative values will indicate a decrease in pitch (detuning).
+
+Additionally, the GUI will include a real-time visualizer of the incoming audio signal. This visualizer will display the signal 
+in the frequency domain, with frequency measured in hertz along the x-axis and magnitude along the y-axis. 
+This will provide  visual feedback in real-time showing how the pitch-shifting algorithm alters the guitar signal.
+
+The core pitch-shifting algorithm will depend on several important parameters. According to Bowen Tang and Kiyofumi Tanaka in 
+\textit{An Efficient Real-Time Pitch Correction System via Field-Programmable Gate Array}, key factors include latency, floating-point arithmetic, 
+and the choice between time-domain and frequency-domain analysis methods \cite{tang2024efficient}. 
+Notable algorithmic candidates for this project include the phase vocoder, constant-Q time-frequency analysis, and auto-correlation-based approaches.
 
 % Functinally, this program will be a small component in a larger software ecosystem. It will be used alongside other plugins, effects and amps
 % and will be contained within a DAW. The DAW acts as a hosting application that contains the signal chain, a series of components that the signal 
@@ -50,12 +62,13 @@ displayed so that the user understands how exactly they are modifying their guit
 When you use an image, such as in Figure~\ref{fig:method}, refer to it in the text.
 
 \begin{figure}[h]
-\begin{center}
-% \includegraphics[scale=0.7]{methodology.png}
-\caption{Archie}
-\label{fig:method}       % Givee a unique label
-\end{center}
+\centering
+\includegraphics[width=\textwidth,height=0.6\textheight,keepaspectratio]{imgs/plugin.png}
+\caption{Proposed plugin design. It consists of a dial used to adjust the pitch of the input signal
+as well as a visualizer to view the modified signal in real time}
+\label{fig:method}
 \end{figure}
+
 
 
 \newpage
