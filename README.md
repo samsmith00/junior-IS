@@ -6,4 +6,8 @@ A brief description.
 
 | **Issue** | **Due date** | |
 | --------- | ------------ | -- |
-| [Example issue description with link](https://github.com/hmm34/example-annotated-bibliography/issues/1) | 9/1/25 | |
+| [Implement a basic project structure using JUCE and cmake]https://github.com/samsmith00/junior-IS/issues/1() | 2/9/25 | |
+
+| [Implement a basic project structure using JUCE and cmake]https://github.com/samsmith00/junior-IS/issues/1() | 2/9/25 | |
+
+
