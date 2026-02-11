@@ -1,6 +1,5 @@
 # Pitch-Shifting Plugin 
-This pitch-shifting audio plugin will modify a guitar's pitch by systematically altering the guitar's input signal
-
+This pitch-shifting audio plugin will modify a guitar’s pitch by digitally transforming the frequency content of the incoming audio signal in real time.
 
 ## Feature Calendar
 
