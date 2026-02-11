@@ -13,7 +13,9 @@ This pitch-shifting audio plugin will modify a guitar's pitch by systematically 
 | [Implement plugin dial](https://github.com/samsmith00/junior-IS/issues/5) | 3/05/25 | |
 | [Implement visualizer axes](https://github.com/samsmith00/junior-IS/issues/6) | 3/06/25 | |
 | [Implement dial lablels](https://github.com/samsmith00/junior-IS/issues/7) | 3/07/25 | |
-
+| [Implement pitch shifting algorithm](https://github.com/samsmith00/junior-IS/issues/2) | 3/20/25 | |
+| [Implement real time I/O](https://github.com/samsmith00/junior-IS/issues/10) | 3/25/25 | |
+| [Add polyphonic pitch shifting support](https://github.com/samsmith00/junior-IS/issues/8) | 4/01/25 | |
 
 
 
