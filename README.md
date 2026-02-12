@@ -16,6 +16,7 @@ This pitch-shifting audio plugin will modify a guitar’s pitch by digitally tra
 | [Implement real time I/O](https://github.com/samsmith00/junior-IS/issues/10) | 3/25/25 | |
 | [Add polyphonic pitch shifting support](https://github.com/samsmith00/junior-IS/issues/8) | 4/01/25 | |
 
-
-
-
+| **Stretch Goals** | **Due date** | |
+| --------- | ------------ | -- |
+| [Implement offline feature](https://github.com/samsmith00/junior-IS/issues/11) | 4/14/25 | |
+| [Implement pitch blending feature](https://github.com/samsmith00/junior-IS/issues/12) | 4/25/25 | |
