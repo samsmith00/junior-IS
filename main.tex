@@ -21,6 +21,18 @@ The introduction will broadly introduce your topic, motivate it, and describe wh
 
 \section{Background}
 
+\subsection{Discrete Fourier Transform}
+The Discrete Fourier Transform is a fundamental tool used in digital signal processing and 
+allows for more sophisticated analysis and synthesis techniques to be used on discrete signals \cite{lyons2010understanding}.   
+The DFT is a process that converts a signal from the time-domain to the frequency domain \cite{lyons2010understanding}. It effectively breaks a signal down 
+into a summation of complex sinusoids and is mathematically defined as: 
+\[
+  X[m] = \sum_{n=0}^{N-1} x[n] \, e^{-j 2\pi n\frac{m}{N}}
+\] 
+where $N$ is the number of samples from the input signal $x[n]$, $n$ denotes the time-domain index, $m$ represents the frequency bin index, 
+$n$ is the index of the input sequenc in the time-domain and $j = \sqrt{-1}$. Each coeffecient in $X[m]$ is complex-valued and can be 
+expressed in terms of magnitude and phase, which describe the contribution of a corresponding frequency component to the overall signal \cite{mcfee_dstbook}.
+
 \section{Related Works}
 
 \section{Methodology}
