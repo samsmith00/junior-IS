@@ -46,7 +46,7 @@ and every other value outside of the windows domain is reduced to zero \cite{roy
 \begin{center}
   \includegraphics[width=8cm]{imgs/non-windowed.png}
   \includegraphics[width=8cm]{imgs/windowed.png}
-\caption{After applying a window function, the signal is tapered at the edges, resulting in a temporally localized signal.} 
+\caption{After applying a window function (highlighted by the orange cosine curve), the signal is tapered at the edges, resulting in a temporally localized signal.} 
  \label{fig:non-windowed-and-windowed}
  \end{center}
 \end{figure}
@@ -64,27 +64,46 @@ and how the output is interpreted. Below is the STFT:
   X[m,k] = \sum_{n=0}^{N-1} x[n+kH]w[n]e^{-2\pi jmn/N}
 \end{align}
 Where $X[m, k]$ is the 2-dimensional output array indexed by both frequency bin and time frame and $x[n + kH]$ is the section of the input signal 
-determined by frame index and hop size \cite{royer2019pitch}. 
+determined by frame index and hop size \cite{royer2019pitch}. The outcome of the STFT is a representation that transforms a signal from the time 
+domain to the frequency domain. In this form, the signal's frequency components can be systematically modified and recombined to reconstruct a new signal.   
 
 
 \section{Related Works}
+
+Pitch-shifting has been approached by a number of time--frequency methods. 
+Early methods, such as Dolson's (1986), employed the use of the Short-Time 
+Fourier Transform in conjunction with the phase vocoder algorithm. 
+In particular, Dolson describes a pitch-shifting method that relies on 
+time-scale manipulation to modify the pitch of a given signal \cite{dolson1986phase}. 
+For example, by stretching a signal, making it longer in the time domain, 
+and then rescaling it back to its original length, the overall frequency 
+content of the signal is effectively decreased, which corresponds to 
+lowering the signal's pitch. Dolson acknowledges, however, that this 
+approach is imperfect: specific constraints must be enforced when 
+performing a pitch shift, as failing to do so may introduce unwanted 
+artifacts into the signal or result in a reconstructed signal that has 
+lost information \cite{dolson1986phase}.
+
+Another limitation of the standard phase-vocoder technique, as discussed 
+in \cite{laroche1999new}, is that only a single linear pitch-scale modification 
+can be applied during processing. That is, all frequency components are 
+multiplied by the same pitch-shifting factor. Consequently, generating harmonized 
+outputs requires repeated application of the full algorithm \cite{laroche1999new}. 
+This significantly increases computational cost and limits real-time 
+feasibility.
+
+These challenges lead to further innovations in the phase vocoder algorithm. 
+Modern implementations shift away from the standard two-step timescale and resample 
+approach and adopt an analysis and resynthesis paradigm \cite{degotzen2000traditional}. 
+The new approach leverages phase information obtained from the STFT step to more accurately 
+reconstruct the modified signal\cite{ degotzen2000traditional}.
+
 
 \section{Methodology}
 Dijkstra's algorithm was chosen for single-source shortest path computation on graphs with non-negative edge weights, following the implementation presented in CLRS~\cite{clrsAlgorithms}.
 
 \section{Results}
 An exemplary figure is shown in Figure~\ref{fig:dijkstra}. Any time a figure is used, it must have a capation and be directly referred to and discussed in the text.
-
-%\begin{figure}[b] puts the image to the (closest) bottom of page
-%\begin{figure}[t] puts the image to the (closest) top of page
-%\begin{figure}[h] allows the image to float, putting it roughly wherever it was placed in the text.
-% \begin{figure}[b] 
-% \begin{center}
-%   \includegraphics[width=5cm]{imgs/dijkstra.png}
-%   \caption{Dijkstra's algorithm does not work on graphs with negative edge weights, as evidenced here.}
-%   \label{fig:dijkstra}
-%  \end{center}
-% \end{figure}
 
 
 
