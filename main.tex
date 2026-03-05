@@ -21,15 +21,15 @@
 \section{Introduction}
 The manipulation of pitch in digital signals is not achieved by simply scaling frequencies, 
 but through structured transformations in the time-frequency domain. Through mathematical processes,
-signals may be metamorphosized in every sense of the word. 
+signals transformed across the time-frequency domain in a variety of ways.
 
 \subsection{Pitch Shifting}
 Pitch shifting is a desirable signal processing effect for a variety of practical reasons. 
 Historically, pitch manipulation emerged from research in vocal processing 
 (giving rise to the term `vocoder' a concatination of the words `vocal' and `coder') \cite{dolson1986phase}. 
 Today, pitch-shifting algorithms are widely used in music production, film, 
-voice acting, and media. In particular, pitch-shifting is used extensively in music production. 
-Digital vocal correction tools such as autotuning rely on pitch 
+voice acting, and media. Specifically in music production,  
+digital vocal correction tools such as autotuning rely on pitch 
 modification techniques to adjust a singer's intonation while preserving 
 timing and vocal characteristics.
 
@@ -42,7 +42,7 @@ Such applications highlight the broad practical demand for high-quality,
 real-time pitch-shifting algorithms.
 
 \subsection{The Phase Vocoder Approach}
-The phase vocoder is a signal processing algorithm primarily used to perform pitch modifications.
+The phase vocoder is a signal processing technique used for both time-scale and pitch modifications.
 This algorithm was chosen to be the core processing algorithm for this project due to the fact that
 the family of vocoder algorithms is known for their reliability, ability to handle polyphonic signals, 
 and their widespread adoption many modern signal processing applications. Furthermore, the phase vocoder
@@ -52,7 +52,23 @@ a real-time pitch-shifting audio plugin.
 
 \subsection{Outline of Remaining Chapters}
 This paper begins with a comprehensive overview of the mathematics needed to understand the phase vocoder
-algorithm. 
+algorithm. It will begin with an explination of the Discrete Fourier Transfrom, the backbone of signal processing, then 
+we will examine windowing, why we need it and what problems it solves. Finally, we will examine the  Short-Time Fourier Transform (STFT)
+which is the core analysis algorithm used in the phase vocoder. 
+
+The next section will provide a deep intuition for the phase vocoder algorithm where the goal is to connect the
+mathematical concepts hilighted in the background section to the processing chain that comprises the phase vocoder algorithm. 
+The section will be divided based on the three fundamental steps that make up the phase vocoder algorithm: analysis, modification and systhesis. 
+
+Next, we will translate the mathematical concepts built up by the previous sections into a coherent program architecture. The audio plugin will be 
+constructed in the Juce framework, an open-source c++ framework designed to build audio audio plugins and and applications, 
+
+Finally, the following section is the results that this project attains. Metrics such as tonality and spectral flatness (noise) will be 
+evaluated against to test how good the phase vocoder is at modifying a givin input signal.
+
+The conclusion follows the results chapter and will primarly focus on future work and optimizations that can be done 
+on this project. Additionally, this section will provide insight into any errors or unoptimized processes in this project and offer
+any additional improvements or next steps. 
 
 \section{Background}
 
