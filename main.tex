@@ -19,9 +19,40 @@
 \maketitle
 
 \section{Introduction}
-%The introduction will broadly introduce your topic, motivate it, and describe what will be done.
 The manipulation of pitch in digital signals is not achieved by simply scaling frequencies, 
-but through structured transformations in the time-frequency domain.
+but through structured transformations in the time-frequency domain. Through mathematical processes,
+signals may be metamorphosized in every sense of the word. 
+
+\subsection{Pitch Shifting}
+Pitch shifting is a desirable signal processing effect for a variety of practical reasons. 
+Historically, pitch manipulation emerged from research in vocal processing 
+(giving rise to the term `vocoder' a concatination of the words `vocal' and `coder') \cite{dolson1986phase}. 
+Today, pitch-shifting algorithms are widely used in music production, film, 
+voice acting, and media. In particular, pitch-shifting is used extensively in music production. 
+Digital vocal correction tools such as autotuning rely on pitch 
+modification techniques to adjust a singer's intonation while preserving 
+timing and vocal characteristics.
+
+Pitch shifting is not limited to vocal signals, however, it is also commonly applied 
+to instrumental audio. For example, electric guitarists use pitch-shifting 
+pedals and digital audio plugins to alter tuning without physically adjusting 
+string tension. This capability allows musicians to explore alternate tunings
+without modifying their instrument hardware or spending vasts amounts of time retuning extended ranged guitars. 
+Such applications highlight the broad practical demand for high-quality, 
+real-time pitch-shifting algorithms.
+
+\subsection{The Phase Vocoder Approach}
+The phase vocoder is a signal processing algorithm primarily used to perform pitch modifications.
+This algorithm was chosen to be the core processing algorithm for this project due to the fact that
+the family of vocoder algorithms is known for their reliability, ability to handle polyphonic signals, 
+and their widespread adoption many modern signal processing applications. Furthermore, the phase vocoder
+is a real-time algorithm, meaning it has the capability to excecute, in its entierty, in an unperceivable 
+abount of time. Hence, this algorithm, along with the JUCE audio plugin framwrok, will provide a basis for creating 
+a real-time pitch-shifting audio plugin. 
+
+\subsection{Outline of Remaining Chapters}
+This paper begins with a comprehensive overview of the mathematics needed to understand the phase vocoder
+algorithm. 
 
 \section{Background}
 
@@ -117,21 +148,14 @@ Since TSM algorithms are more naturally suited to speed changes,
 they typically require a resample step to restore the modified signal to its original duration \cite{rai2019analysis}. 
 These algorithms must incorporate a resmaple step inorder to convert the modified signal back to the original signal's duration \cite{rai2019analysis}. 
 
-\subsection{Positioning of the Present Work}
-
-
-
-
-
-
 
 
 
 \section{Methodology}
-Dijkstra's algorithm was chosen for single-source shortest path computation on graphs with non-negative edge weights, following the implementation presented in CLRS~\cite{clrsAlgorithms}.
+%Dijkstra's algorithm was chosen for single-source shortest path computation on graphs with non-negative edge weights, following the implementation presented in CLRS~\cite{clrsAlgorithms}.
 
 \section{Results}
-An exemplary figure is shown in Figure~\ref{fig:dijkstra}. Any time a figure is used, it must have a capation and be directly referred to and discussed in the text.
+%An exemplary figure is shown in Figure~\ref{fig:dijkstra}. Any time a figure is used, it must have a capation and be directly referred to and discussed in the text.
 
 
 
