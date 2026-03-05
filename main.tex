@@ -73,10 +73,14 @@ any additional improvements or next steps.
 \section{Background}
 
 \subsection{Discrete Fourier Transform}
-The Discrete Fourier Transform is a fundamental tool used in digital signal processing that 
+The Discrete Fourier Transform (DFT) is a fundamental tool used in digital signal processing that 
 enables sophisticated analysis and synthesis of discrete-time signals \cite{lyons2010understanding}.   
 The DFT transforms a signal from the time domain into its frequency-domain representation,  
-allowing the signal to be expressed as a sum of sinusoids \cite{lyons2010understanding}. Mathematically, the DFT is defined as: 
+allowing the signal to be expressed as a sum of sinusoids \cite{lyons2010understanding}. The DFT accepts a finite 
+sequence of $N$ discrete samples and produces $N$ complex-valued outputs, each representing the signal's magnitude 
+and phase at one of $N$ evenly-spaced frequency bins. 
+The output of the DFT can be better understood as a sequence of $N$ complex numbers representing amplitude and phase for each analysis frequency \cite{mcfee_dstbook}.  
+Mathematically, the DFT is defined as: 
 \begin{align}
   X[m] = \sum_{n=0}^{N-1} x[n] \, e^{-j 2\pi n\frac{m}{N}}
 \end{align}
@@ -98,9 +102,10 @@ and every other value outside of the windows domain is reduced to zero \cite{roy
  \end{center}
 \end{figure}
 
-As dipicted by Figure~\ref{fig:non-windowed-and-windowed}, after applying the window function to the example signal, the edges of the signal
+As depicted  by Figure~\ref{fig:non-windowed-and-windowed}, after applying the window function to the example signal, the edges of the signal
 tend toward zero. In this example, the Hanning window function was used to shape the signal, however, there are multiple windowing functions
-such as the Rectangle window function, Triangle window function and Hamming window function \cite{mcfee_dstbook}
+such as the Rectangle window function, Triangle window function and Hamming window function \cite{mcfee_dstbook}. For this project, the Hanning
+window will be employed as it yields a more smooth, continuous signal during the resynthesis step \cite{degotzen2000traditional}.
 
 \subsection{Short-Time Fourier Transform}
 The Short-Time Fourier Transform (STFT) is a time-frequency representation used to compute the DFT of contiguous windowed segments of a signal. 
