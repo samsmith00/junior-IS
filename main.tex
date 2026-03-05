@@ -70,6 +70,7 @@ domain to the frequency domain. In this form, the signal's frequency components 
 
 \section{Related Works}
 
+\subsection{Classical Phase Vocoder Approaches}
 Pitch-shifting has been approached by a number of time--frequency methods. 
 Early methods, such as Dolson's (1986), employed the use of the Short-Time 
 Fourier Transform in conjunction with the phase vocoder algorithm. 
@@ -82,21 +83,48 @@ lowering the signal's pitch. Dolson acknowledges, however, that this
 approach is imperfect: specific constraints must be enforced when 
 performing a pitch shift, as failing to do so may introduce unwanted 
 artifacts into the signal or result in a reconstructed signal that has 
-lost information \cite{dolson1986phase}.
+lost information \cite{dolson1986phase}. While effective for monophonic (single note) pitch scaling, 
+this classical time-scale modification framework treats spectral bins independently, 
+which can lead to phase incoherence and unwanted artifacts. 
+These limitations motivated subsequent refinements to the phase vocoder algorithm.
 
-Another limitation of the standard phase-vocoder technique, as discussed 
-in \cite{laroche1999new}, is that only a single linear pitch-scale modification 
-can be applied during processing. That is, all frequency components are 
-multiplied by the same pitch-shifting factor. Consequently, generating harmonized 
-outputs requires repeated application of the full algorithm \cite{laroche1999new}. 
-This significantly increases computational cost and limits real-time 
-feasibility.
+\subsection{Phase Vocoder Optimizations}
 
-These challenges lead to further innovations in the phase vocoder algorithm. 
-Modern implementations shift away from the standard two-step timescale and resample 
-approach and adopt an analysis and resynthesis paradigm \cite{degotzen2000traditional}. 
+Unlike the original process chain described by Dolson (1986), 
+which applies a uniform scaling factor to all spectral components, 
+later work by Laroche and Dolson (1999) introduces refinements that improve 
+frequency coherence \cite{laroche1999new}. In particular, they highlight a new 
+peak-detection paradigm, where peaks refer to how much a particular frequency 
+is in the input signal. Once the peaks are detected, they can be shifted around 
+by a pitch-factor and unlike the version described by Dolson (1986), the pitch-factor 
+is not restricted to an integer amount \cite{laroche1999new}.
+ 
+In addition to optimizing frequency resolution, modern implementations of the phase vocoder 
+shift away from the standard two-step timescale and resample approach and 
+adopt an analysis and resynthesis paradigm \cite{degotzen2000traditional}. 
 The new approach leverages phase information obtained from the STFT step to more accurately 
-reconstruct the modified signal\cite{ degotzen2000traditional}.
+reconstruct the modified signal \cite{ degotzen2000traditional}. More specifically, a phase adjustment 
+value can be derived from the frequency bins across two frames and when added to the original frequency 
+approximation the accuracy of the frequency estimation is increased \cite{lim2007phasevocoder}.
+
+
+\subsection{Alternative Pitch-Shifting Methods}
+
+The prior sections highlight the phase vocoder approach to pitch-shifting, a frequency-domain algorithm 
+that converts a signal from the time domain to the frequency domain to compute the pitch shift. 
+An alternative approach uses time-scale modification (TSM) algorithms, which operate entirely in the time domain \cite{rai2019analysis}. 
+Since TSM algorithms are more naturally suited to speed changes, 
+they typically require a resample step to restore the modified signal to its original duration \cite{rai2019analysis}. 
+These algorithms must incorporate a resmaple step inorder to convert the modified signal back to the original signal's duration \cite{rai2019analysis}. 
+
+\subsection{Positioning of the Present Work}
+
+
+
+
+
+
+
 
 
 \section{Methodology}
