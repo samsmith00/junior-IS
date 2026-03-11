@@ -1,4 +1,5 @@
 #pragma once
+#include <unistd.h>
 
 namespace tremolo {
 class Tremolo {
@@ -73,7 +74,7 @@ private:
   juce::dsp::WindowingFunction<float> window;
 
   // Circular Buffer Initialization
-  unsigned int readPointer = 0;            // keeps track of current write pos.
+  unsigned int readPointer = 0;            // keeps track of current write pos in input buffer.
   unsigned int hopPos = 0;                 // counts up to 256
   std::array<float, fftSize> inputBuffer;  // Circular input buffer
   std::array<float, fftSize> outputBuffer; // Circular output buffer
@@ -85,21 +86,28 @@ private:
     const float* inputPtr = inputBuffer.data();
     float* fftPtr = fftData.data();
 
-    std::memcpy(fftPtr, inputPtr + pos, (fftSize - pos) * sizeof(float)); // (void* dest, const void* src, count)
-    if (pos > 0) {
-      std::memcpy(fftPtr + fftSize - pos, inputPtr, pos * sizeof(float));
+    std::memcpy(fftPtr, inputPtr + readPointer, (fftSize - readPointer) * sizeof(float)); // (void* dest, const void* src, count)
+    if (readPointer > 0) {
+      std::memcpy(fftPtr + fftSize - readPointer, inputPtr, readPointer * sizeof(float));
     }
 
     window.multiplyWithWindowingTable(fftPtr, fftSize);
     FFT.performRealOnlyForwardTransform(fftPtr, true); // just compute up to the Nyquist frequency
     // perform some sort of modification
-    FFT.performRealOnlyBackwardTransform(fftPtr);
+    FFT.performRealOnlyInverseTransform(fftPtr);
     window.multiplyWithWindowingTable(fftPtr, fftSize);
 
     for (int i = 0; i < fftSize; ++i) {
       fftPtr[i] *= windowCorrection;
     }
 
+    for (int i = 0; i < readPointer; ++i) {
+      outputBuffer[i] += fftData[i + fftSize - readPointer];
+    }
+
+    for (int i = 0; i < fftSize - readPointer; ++i) {
+      outputBuffer[i + readPointer] += fftData[i];
+    }
   }
 
   // Reset FFT process
