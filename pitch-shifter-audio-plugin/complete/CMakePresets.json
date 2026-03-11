@@ -1,0 +1,179 @@
+{
+  "version": 5,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 25,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "default",
+      "binaryDir": "cmake-build",
+      "cacheVariables": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "CMAKE_BUILD_TYPE": "Debug"
+      }
+    },
+    {
+      "name": "default-with-tests",
+      "inherits": "default",
+      "binaryDir": "cmake-build-with-tests",
+      "cacheVariables": {
+        "BUILD_TESTS": "ON"
+      }
+    },
+    {
+      "name": "default-with-examples",
+      "inherits": "default-with-tests",
+      "binaryDir": "cmake-build-with-examples",
+      "cacheVariables": {
+        "BUILD_EXAMPLES": "ON"
+      }
+    },
+    {
+      "name": "release",
+      "binaryDir": "cmake-release-build",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "release-with-tests",
+      "binaryDir": "cmake-release-build-with-tests",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "BUILD_TESTS": "ON"
+      }
+    },
+    {
+      "name": "release-with-debug-info",
+      "binaryDir": "cmake-release-with-debug-info-build",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "RelWithDebInfo"
+      }
+    },
+    {
+      "name": "ninja-debug",
+      "generator": "Ninja",
+      "binaryDir": "ninja-debug-build",
+      "cacheVariables": {
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON",
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_COMPILE_WARNING_AS_ERROR": "ON",
+        "BUILD_TESTS": "ON",
+        "BUILD_EXAMPLES": "ON"
+      }
+    },
+    {
+      "name": "ninja-release",
+      "inherits": "ninja-debug",
+      "binaryDir": "ninja-release-build",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release"
+      }
+    },
+    {
+      "name": "vs",
+      "generator": "Visual Studio 17 2022",
+      "binaryDir": "vs-build",
+      "cacheVariables": {
+        "CMAKE_COMPILE_WARNING_AS_ERROR": "ON",
+        "BUILD_TESTS": "ON",
+        "BUILD_EXAMPLES": "ON"
+      }
+    },
+    {
+      "name": "xcode",
+      "generator": "Xcode",
+      "binaryDir": "xcode-build"
+    }
+  ],
+  "buildPresets": [
+    {
+      "name": "default",
+      "configurePreset": "default"
+    },
+    {
+      "name": "default-with-tests",
+      "configurePreset": "default-with-tests"
+    },
+    {
+      "name": "default-with-examples",
+      "configurePreset": "default-with-examples"
+    },
+    {
+      "name": "release",
+      "configurePreset": "release",
+      "configuration": "Release"
+    },
+    {
+      "name": "release-with-tests",
+      "configurePreset": "release-with-tests",
+      "configuration": "Release"
+    },
+    {
+      "name": "release-with-debug-info",
+      "configurePreset": "release-with-debug-info",
+      "configuration": "RelWithDebInfo"
+    },
+    {
+      "name": "ninja-debug",
+      "configurePreset": "ninja-debug"
+    },
+    {
+      "name": "ninja-release",
+      "configurePreset": "ninja-release"
+    },
+    {
+      "name": "vs",
+      "configurePreset": "vs"
+    },
+    {
+      "name": "xcode",
+      "configurePreset": "xcode"
+    }
+  ],
+  "testPresets": [
+    {
+      "name": "default-with-tests",
+      "configurePreset": "default-with-tests",
+      "output": { "outputOnFailure": true },
+      "execution": {
+        "noTestsAction": "error",
+        "stopOnFailure": false
+      }
+    },
+    {
+      "name": "default-with-examples",
+      "inherits": "default-with-tests",
+      "configurePreset": "default-with-tests"
+    },
+    {
+      "name": "release-with-tests",
+      "inherits": "default-with-tests",
+      "configurePreset": "release-with-tests"
+    },
+    {
+      "name": "ninja-debug",
+      "inherits": "default-with-tests",
+      "configurePreset": "ninja-debug"
+    },
+    {
+      "name": "ninja-release",
+      "inherits": "default-with-tests",
+      "configurePreset": "ninja-release"
+    },
+    {
+      "name": "vs",
+      "inherits": "default-with-tests",
+      "configurePreset": "vs",
+      "configuration": "Debug"
+    },
+    {
+      "name": "xcode",
+      "inherits": "default-with-tests",
+      "configurePreset": "xcode",
+      "configuration": "Debug"
+    }
+  ]
+}
