@@ -1,7 +1,7 @@
 <div align="center">
 
-# Tremolo Audio Plugin
-
+# Pitch-shifter Audio Plugin
+<!-- 
 [![License](https://img.shields.io/badge/license-Unlicense-blue.svg)](LICENSE.md)
 ![Build Status](https://github.com/juce-framework/tremolo-juce-course/actions/workflows/cmake.yml/badge.svg)
 ![CMake](https://img.shields.io/badge/CMake-3.25+-064F8C.svg?logo=cmake)
@@ -9,11 +9,16 @@
 ![JUCE](https://img.shields.io/badge/JUCE-8.0.10-orange.svg)
 ![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Windows%20%7C%20Linux-lightgrey.svg)
 
-<img alt="Tremolo user interface" src="docs/UI.png" width="512px">
+<!-- <img alt="Tremolo user interface" src="docs/UI.png" width="512px"> 
 
-Tremolo audio plugin project used for the [Official JUCE Audio Plugin Development Course](https://www.wolfsoundacademy.com/juce) 🎓
+
+Pitch-shifter audio plugin project used for the [Official JUCE Audio Plugin Development Course](https://www.wolfsoundacademy.com/juce) 🎓
+-->
+
 
 ![JUCE audio plugin development course logo](docs/JUCE_Course_logo.svg)
+
+
 
 </div>
 
@@ -23,7 +28,7 @@ Tremolo audio plugin project used for the [Official JUCE Audio Plugin Developmen
   * AU
   * VST3
   * Standalone
-* Tremolo audio effect: tremolo is amplitude modulation at a rate below the human hearing range. The result is a "pulsing" sound.
+<!-- * Tremolo audio effect: tremolo is amplitude modulation at a rate below the human hearing range. The result is a "pulsing" sound.
 * Parameters
   * modulation rate
   * LFO waveform
@@ -85,4 +90,7 @@ The plugin project is present in two folders:
 
 ## 📜 License
 
+
+
 We use the incredibly liberal ["Unlicense" license](LICENSE.md). You can basically do whatever you want with the code. Remember that the commercial use of products built with JUCE requires a JUCE license. Refer to the JUCE license for details.
+-->
