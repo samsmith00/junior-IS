@@ -43,31 +43,8 @@ public:
         outputBufferWritePtr = (outputBufferWritePtr + hopSize) % outputBuffer.size();
       }
 
-
-
-
-
-
-      // TODO: generate the LFO value
-      // TODO: calculate the modulation value
-
-      /*
-       * Dont need channels for guitar plugin
-
-      //for each channel sample in the frame
-      for (const auto channelIndex :
-           std::views::iota(0, buffer.getNumChannels())) {
-        // get the input sample
-        const auto inputSample = buffer.getSample(channelIndex, frameIndex);
-
-        // TODO: modulate the sample
-        const auto outputSample = inputSample;
-
-        // set the output sample
-        buffer.setSample(channelIndex, frameIndex, outputSample);
+      buffer.setSample(0, inputBuffer[inputBufferPtr], outputBuffer[outputBufferWritePtr]);
       }
-      */
-    }
   }
 
   void reset() noexcept {}
@@ -112,7 +89,9 @@ private:
     // perform FFT
     FFT.performRealOnlyForwardTransform(fftPtr, true);
 
-    // Here is the location where future pitch shifting will happen
+    //  ****************************************************************
+    //  * Here is the location where future pitch shifting will happen *
+    //  ****************************************************************
 
     // Perform inverse FFT
     FFT.performRealOnlyInverseTransform(fftPtr);
