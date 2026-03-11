@@ -94,6 +94,19 @@ private:
   static constexpr float windowCorrection = hopSize / fftSize; // have to scale amplitude of output since there are several blocks overlapping
 
 
+  void processFFT(std::array<float, fftSize> const&inputBuffer, unsigned int inputPos, std::array<float, fftSize> &outputBuffer, unsigned int outPos) noexcept {
+    // making the fftData be in order from oldest to newest sample
+    // first copy from inputPtr position to end of inputBuffer (oldest data)
+    // second copy data up to inputPtr position and place at end of fftData (newest data)
+    const float* inputPtr = inputBuffer.data();
+    float* fftPtr = fftData.data();
+
+    std::memcpy(fftPtr, inputPtr + inputBufferPtr, (fftSize - inputBufferPtr) * sizeof(float));
+    if (pos > 0) {
+      std::memcpy(fftPtr + fftSize - inputBufferPtr, inputPtr, inputBufferPtr * sizeof(float));
+    }
+  }
+
   void frameFFT() noexcept {
     const float* inputPtr = inputBuffer.data();
     float* fftPtr = fftData.data();
