@@ -22,17 +22,17 @@ public:
     for (const auto frameIndex : std::views::iota(0, buffer.getNumSamples())) {
 
       // Populate circular buffer with samples for FFT computation
-      inputBuffer[readPointer] = buffer.getSample(0, frameIndex);
-      outputBuffer[readPointer] = 0.0f;
-      readPointer++;
+      inputBuffer[inputBufferPtr] = buffer.getSample(0, frameIndex);
+      outputBuffer[inputBufferPtr] = 0.0f;
+      inputBufferPtr++;
 
-      if (readPointer == fftSize) {
-        readPointer = 0;
+      if (inputBufferPtr == fftSize) {
+        inputBufferPtr = 0;
       }
 
-      hopPos++;
-      if (hopPos == hopSize) {
-        hopPos = 0;
+      hopCounter++;
+      if (hopCounter == hopSize) {
+        hopCounter = 0;
         // PERFORM FFT
       }
 
@@ -74,21 +74,23 @@ private:
   juce::dsp::WindowingFunction<float> window;
 
   // Circular Buffer Initialization
-  unsigned int readPointer = 0;            // keeps track of current write pos in input buffer.
-  unsigned int hopPos = 0;                 // counts up to 256
-  std::array<float, fftSize> inputBuffer;  // Circular input buffer
-  std::array<float, fftSize> outputBuffer; // Circular output buffer
-  std::array<float, fftSize * 2> fftData;  // array of complex values (a + bj), that is why we multiply the size by 2
-  static constexpr float windowCorrection = 2.0f / 3.0f;
+  unsigned int inputBufferPtr = 0;                             // keeps track of current write pos in input buffer.
+  unsigned int hopCounter = 0;                                 // counts up to 256
+  unsigned int outputBufferReadPtr = 0;                        // position for reading into buff
+  unsigned int outputBufferWritePtr = 0;                       // position for writing from buff
+  std::array<float, fftSize> inputBuffer;                      // Circular input buffer
+  std::array<float, fftSize> outputBuffer;                     // Circular output buffer
+  std::array<float, fftSize * 2> fftData;                      // array of complex values (a + bj), that is why we multiply the size by 2
+  static constexpr float windowCorrection = hopSize / fftSize; // have to scale amplitude of output since there are several blocks overlapping
 
 
   void frameFFT() noexcept {
     const float* inputPtr = inputBuffer.data();
     float* fftPtr = fftData.data();
 
-    std::memcpy(fftPtr, inputPtr + readPointer, (fftSize - readPointer) * sizeof(float)); // (void* dest, const void* src, count)
-    if (readPointer > 0) {
-      std::memcpy(fftPtr + fftSize - readPointer, inputPtr, readPointer * sizeof(float));
+    std::memcpy(fftPtr, inputPtr + inputBufferPtr, (fftSize - inputBufferPtr) * sizeof(float)); // (void* dest, const void* src, count)
+    if (inputBufferPtr > 0) {
+      std::memcpy(fftPtr + fftSize - inputBufferPtr, inputPtr, inputBufferPtr * sizeof(float));
     }
 
     window.multiplyWithWindowingTable(fftPtr, fftSize);
@@ -101,19 +103,19 @@ private:
       fftPtr[i] *= windowCorrection;
     }
 
-    for (int i = 0; i < readPointer; ++i) {
-      outputBuffer[i] += fftData[i + fftSize - readPointer];
+    for (int i = 0; i < inputBufferPtr; ++i) {
+      outputBuffer[i] += fftData[i + fftSize - inputBufferPtr];
     }
 
-    for (int i = 0; i < fftSize - readPointer; ++i) {
-      outputBuffer[i + readPointer] += fftData[i];
+    for (int i = 0; i < fftSize - inputBufferPtr; ++i) {
+      outputBuffer[i + inputBufferPtr] += fftData[i];
     }
   }
 
   // Reset FFT process
   void resetFFT() noexcept {
-    readPointer = 0;
-    hopPos = 0;
+    inputBufferPtr = 0;
+    hopCounter = 0;
     std::fill(inputBuffer.begin(), inputBuffer.end(), 0.0f);
     std::fill(outputBuffer.begin(), outputBuffer.end(), 0.0f);
   }
