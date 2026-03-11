@@ -23,18 +23,28 @@ public:
 
       // Populate circular buffer with samples for FFT computation
       inputBuffer[inputBufferPtr] = buffer.getSample(0, frameIndex);
-      outputBuffer[inputBufferPtr] = 0.0f;
+      //outputBuffer[inputBufferPtr] = 0.0f;
       inputBufferPtr++;
 
-      if (inputBufferPtr == fftSize) {
-        inputBufferPtr = 0;
+      // get output sample and clear the content back to 0
+      float out = outputBuffer[outputBufferReadPtr];
+      outputBuffer[outputBufferReadPtr] = 0;
+
+      out *= windowCorrection;
+      outputBufferReadPtr++;
+      if (outputBufferReadPtr >= inputBuffer.size()) {
+        outputBufferReadPtr = 0;
       }
 
-      hopCounter++;
-      if (hopCounter == hopSize) {
+      if (++hopCounter >= hopSize) {
         hopCounter = 0;
-        // PERFORM FFT
+        // Process FFT
+
+        outputBufferWritePtr = (outputBufferWritePtr + hopSize) % outputBuffer.size();
       }
+
+
+
 
 
 
