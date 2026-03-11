@@ -35,8 +35,6 @@ END_JUCE_MODULE_DECLARATION
 #include <array>
 #include <cmath>
 // My additions
-#include <juce_AbstractFifo.h>
-
 
 #include "include/Tremolo/Parameters.h"
 #include "include/Tremolo/CustomLookAndFeel.h"

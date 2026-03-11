@@ -1,12 +1,11 @@
 #pragma once
-#include <unistd.h>
 
 namespace tremolo {
 class Tremolo {
 public:
   // class constructor
   Tremolo() :
-    FFT(fftOrder),
+    fft(fftOrder),
     window(fftSize + 1, juce::dsp::WindowingFunction<float>::WindowingMethod::hann, false)
   {
     resetFFT();
@@ -25,6 +24,9 @@ public:
       inputBuffer[inputBufferPtr] = buffer.getSample(0, frameIndex);
       //outputBuffer[inputBufferPtr] = 0.0f;
       inputBufferPtr++;
+      if (inputBufferPtr >= inputBuffer.size()) {
+        inputBufferPtr = 0;
+      }
 
       // get output sample and clear the content back to 0
       float out = outputBuffer[outputBufferReadPtr];
@@ -39,11 +41,9 @@ public:
       if (++hopCounter >= hopSize) {
         hopCounter = 0;
         processFFT();
-
-        outputBufferWritePtr = (outputBufferWritePtr + hopSize) % outputBuffer.size();
       }
 
-      buffer.setSample(0, inputBuffer[inputBufferPtr], outputBuffer[outputBufferWritePtr]);
+      buffer.setSample(0, frameIndex, out);
       }
   }
 
@@ -57,7 +57,7 @@ private:
   static constexpr int overlap = 4;                  // 75% overlap
   static constexpr int hopSize = fftSize / overlap;  // 256 samples
 
-  juce::dsp::FFT FFT;
+  juce::dsp::FFT fft;
   juce::dsp::WindowingFunction<float> window;
 
   // Circular Buffer Initialization
@@ -87,14 +87,14 @@ private:
     window.multiplyWithWindowingTable(fftPtr, fftSize);
 
     // perform FFT
-    FFT.performRealOnlyForwardTransform(fftPtr, true);
+    fft.performRealOnlyForwardTransform(fftPtr, true);
 
     //  ****************************************************************
     //  * Here is the location where future pitch shifting will happen *
     //  ****************************************************************
 
     // Perform inverse FFT
-    FFT.performRealOnlyInverseTransform(fftPtr);
+    fft.performRealOnlyInverseTransform(fftPtr);
 
     window.multiplyWithWindowingTable(fftPtr, fftSize);
 
