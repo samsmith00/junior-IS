@@ -38,7 +38,7 @@ public:
 
       if (++hopCounter >= hopSize) {
         hopCounter = 0;
-        // Process FFT
+        processFFT();
 
         outputBufferWritePtr = (outputBufferWritePtr + hopSize) % outputBuffer.size();
       }
@@ -94,16 +94,40 @@ private:
   static constexpr float windowCorrection = hopSize / fftSize; // have to scale amplitude of output since there are several blocks overlapping
 
 
-  void processFFT(std::array<float, fftSize> const&inputBuffer, unsigned int inputPos, std::array<float, fftSize> &outputBuffer, unsigned int outPos) noexcept {
-    // making the fftData be in order from oldest to newest sample
+  void processFFT() noexcept {
+    // making the fftData be in order from oldest to newest sample (unwrap circular buffer)
     // first copy from inputPtr position to end of inputBuffer (oldest data)
     // second copy data up to inputPtr position and place at end of fftData (newest data)
     const float* inputPtr = inputBuffer.data();
     float* fftPtr = fftData.data();
 
     std::memcpy(fftPtr, inputPtr + inputBufferPtr, (fftSize - inputBufferPtr) * sizeof(float));
-    if (pos > 0) {
+    if (inputBufferPtr > 0) {
       std::memcpy(fftPtr + fftSize - inputBufferPtr, inputPtr, inputBufferPtr * sizeof(float));
+    }
+
+    // window our values to reduce spectral leakage
+    window.multiplyWithWindowingTable(fftPtr, fftSize);
+
+    // perform FFT
+    FFT.performRealOnlyForwardTransform(fftPtr, true);
+
+    // Here is the location where future pitch shifting will happen
+
+    // Perform inverse FFT
+    FFT.performRealOnlyInverseTransform(fftPtr);
+
+    window.multiplyWithWindowingTable(fftPtr, fftSize);
+
+    for (int i = 0; i < fftSize; ++i) {
+      fftPtr[i] *= windowCorrection;
+    }
+
+    for (int i = 0; i < inputBufferPtr; ++i) {
+      outputBuffer[i] += fftData[i + fftSize - inputBufferPtr];
+    }
+    for (int i = 0; i < fftSize - inputBufferPtr; ++i) {
+      outputBuffer[i + inputBufferPtr] += fftData[i];
     }
   }
 
