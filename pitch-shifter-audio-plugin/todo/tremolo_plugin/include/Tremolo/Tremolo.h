@@ -110,34 +110,6 @@ private:
     }
   }
 
-  void frameFFT() noexcept {
-    const float* inputPtr = inputBuffer.data();
-    float* fftPtr = fftData.data();
-
-    std::memcpy(fftPtr, inputPtr + inputBufferPtr, (fftSize - inputBufferPtr) * sizeof(float)); // (void* dest, const void* src, count)
-    if (inputBufferPtr > 0) {
-      std::memcpy(fftPtr + fftSize - inputBufferPtr, inputPtr, inputBufferPtr * sizeof(float));
-    }
-
-    window.multiplyWithWindowingTable(fftPtr, fftSize);
-    FFT.performRealOnlyForwardTransform(fftPtr, true); // just compute up to the Nyquist frequency
-    // perform some sort of modification
-    FFT.performRealOnlyInverseTransform(fftPtr);
-    window.multiplyWithWindowingTable(fftPtr, fftSize);
-
-    for (int i = 0; i < fftSize; ++i) {
-      fftPtr[i] *= windowCorrection;
-    }
-
-    for (int i = 0; i < inputBufferPtr; ++i) {
-      outputBuffer[i] += fftData[i + fftSize - inputBufferPtr];
-    }
-
-    for (int i = 0; i < fftSize - inputBufferPtr; ++i) {
-      outputBuffer[i + inputBufferPtr] += fftData[i];
-    }
-  }
-
   // Reset FFT process
   void resetFFT() noexcept {
     inputBufferPtr = 0;
