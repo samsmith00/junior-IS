@@ -107,6 +107,9 @@ As depicted  by Figure~\ref{fig:non-windowed-and-windowed}, after applying the w
 tend toward zero. In this example, the Hanning window function was used to shape the signal, however, there are multiple windowing functions
 such as the Rectangle window function, Triangle window function and Hamming window function \cite{mcfee_dstbook}. For this project, the Hanning
 window will be employed as it yields a more smooth, continuous signal during the resynthesis step \cite{degotzen2000traditional}.
+\begin{itemize}
+  \item Further explain how windowing prevents spectral leakage
+\end{itemize}
 
 \subsection{Short-Time Fourier Transform}
 The Short-Time Fourier Transform (STFT) is a time-frequency representation used to compute the DFT of contiguous windowed segments of a signal. 
@@ -175,8 +178,16 @@ These algorithms must incorporate a resmaple step inorder to convert the modifie
 In this section, I will explain the core steps of the phase vocoder algorithm. It will be broken up by the phase coder steps:
 analysis, modification and synthesis. 
 
+\subsubsection*{Transition Sentences}
+The following section will highlight the inerworkings of the ph
+
 \subsection{Anaysis}
 This section will cover signal processing, connect the DFT to the phase vocoder algorithm and conclude with a discussion on windowing
+\begin{itemize}
+  \item Perform block-based processing to analyze just a chuck of the incoming audio buffer
+  \item Apply the windowing function to reduce spectral leakage
+  \item The result will be a frequency-domain representation of the signal chunk, this is the correct representation for preforming frequency transformations
+\end{itemize}
 
 \subsection{Modification}
 In this section I will explain how the phase algorithm uses the phase information obtained from the DFT to perform a more accurate
@@ -185,15 +196,32 @@ frequency transformation. Additionally, the phase information is used to better 
 \subsection{Synthesis}
 This section will explain how the phase vocoder algorithm reconstructs the modified signal. It involves reapplying our windowing function and 
 compleating COLA (Constant Overlap-Add)
+\begin{itemize}
+  \item After performing the frequency transformation step, we take the inverse DFT of the signal to convert it back into the time-domain
+  \item We also apply the windowing function again to ensure that when we recombine the signal the edges of contiguous blocks line up
+  \item I will explain why then we need to multiply our discrete signal values by a windowing Correctin value
+\end{itemize}
 
 \section{Methodology}
 %Dijkstra's algorithm was chosen for single-source shortest path computation on graphs with non-negative edge weights, following the implementation presented in CLRS~\cite{clrsAlgorithms}.
 In this section, I will be explaining how the phase vocoder algorithm is implemented in the JUCE framework. This section will be comprised of how JUCE operates on audio signals
 the data structures needed to implement the phase vocoder algorithm, such as circular buffers, how the DFT is computed in JUCE 
+\begin{itemize}
+  \item I built a pitch shifting audio plugin
+  \item My goals were to build a real-time, polyphonic pitch shifting plugin that could pitch shift up to 5 semitones (downtune and uptune)
+  \item I implemented this audio plugin in the JUCE framework, an open source framework used to develop audio applications and plugins
+  \item The main plugin methods we are concerned with are PluginProcessor.PrepareToPlay(), PluginProcessor.releaseResources(), and pluginProcessor.processBlock()
+  \item The main functionality of JUCE we are concerned with is the AudioBuffer. This is an array of discrete signal values that get's passed to the plugin class
+  \item I will also explain circular buffers, as this is the main data structure that the phase vocoder employs. It is used in two places, the inputBuffer and outputBuffer
+\end{itemize}
 
 \section{Results}
 %An exemplary figure is shown in Figure~\ref{fig:dijkstra}. Any time a figure is used, it must have a capation and be directly referred to and discussed in the text.
-
+\begin{itemize}
+  \item A successful pitch-shift audio plugin will produce a shifted audio signal with minimal artifacts introduced
+  \item Additionally, the success will depend on how well it can handle multiple notes. Full chords, two power chords, fast-alternate picking etc.
+  \item If time permits, I will test the audio clarity using one of the tests found here: \cite{rai2019analysis}
+\end{itemize}
 
 
 \section{Conclusion}
