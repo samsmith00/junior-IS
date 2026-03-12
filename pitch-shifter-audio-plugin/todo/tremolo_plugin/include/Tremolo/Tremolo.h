@@ -17,6 +17,7 @@ public:
   }
 
   void process(juce::AudioBuffer<float>& buffer) noexcept {
+    juce::Logger::writeToLog("processing");
     // for each frame
     for (const auto frameIndex : std::views::iota(0, buffer.getNumSamples())) {
 
@@ -32,7 +33,6 @@ public:
       float out = outputBuffer[outputBufferReadPtr];
       outputBuffer[outputBufferReadPtr] = 0;
 
-      out *= windowCorrection;
       outputBufferReadPtr++;
       if (outputBufferReadPtr >= inputBuffer.size()) {
         outputBufferReadPtr = 0;
@@ -42,9 +42,8 @@ public:
         hopCounter = 0;
         processFFT();
       }
-
       buffer.setSample(0, frameIndex, out);
-      }
+    }
   }
 
   void reset() noexcept {}
@@ -64,11 +63,10 @@ private:
   unsigned int inputBufferPtr = 0;                             // keeps track of current write pos in input buffer.
   unsigned int hopCounter = 0;                                 // counts up to 256
   unsigned int outputBufferReadPtr = 0;                        // position for reading into buff
-  unsigned int outputBufferWritePtr = 0;                       // position for writing from buff
   std::array<float, fftSize> inputBuffer;                      // Circular input buffer
   std::array<float, fftSize> outputBuffer;                     // Circular output buffer
   std::array<float, fftSize * 2> fftData;                      // array of complex values (a + bj), that is why we multiply the size by 2
-  static constexpr float windowCorrection = hopSize / fftSize; // have to scale amplitude of output since there are several blocks overlapping
+  static constexpr float windowCorrection = static_cast<float>(hopSize) / fftSize; // have to scale amplitude of output since there are several blocks overlapping
 
 
   void processFFT() noexcept {
@@ -99,7 +97,7 @@ private:
     window.multiplyWithWindowingTable(fftPtr, fftSize);
 
     for (int i = 0; i < fftSize; ++i) {
-      fftPtr[i] *= windowCorrection;
+       fftPtr[i] *= windowCorrection;
     }
 
     for (int i = 0; i < inputBufferPtr; ++i) {

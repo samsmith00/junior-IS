@@ -54,7 +54,6 @@ void PluginProcessor::prepareToPlay(double sampleRate,
                                     int expectedMaxFramesPerBlock) {
   // Use this method as the place to do any pre-playback
   // initialization that you need, e.g., allocate memory.
-
   tremolo.prepare(sampleRate, expectedMaxFramesPerBlock);
 }
 
@@ -83,8 +82,8 @@ bool PluginProcessor::isBusesLayoutSupported(const BusesLayout& layouts) const {
   return true;
 }
 
-void PluginProcessor::processBlock(juce::AudioBuffer<float>& buffer,
-                                   juce::MidiBuffer& midiMessages) {
+  void PluginProcessor::processBlock(juce::AudioBuffer<float>& buffer,
+                                     juce::MidiBuffer& midiMessages) {
   juce::ignoreUnused(midiMessages);
 
   juce::ScopedNoDenormals noDenormals;
@@ -100,13 +99,14 @@ void PluginProcessor::processBlock(juce::AudioBuffer<float>& buffer,
   for (const auto channelToClear :
        std::views::iota(totalNumInputChannels, totalNumOutputChannels)) {
     buffer.clear(channelToClear, 0, buffer.getNumSamples());
-  }
+       }
 
   // TODO: update parameters
   // TODO: check for bypass
 
   // apply tremolo
   tremolo.process(buffer);
+  buffer.clear();
 }
 
 bool PluginProcessor::hasEditor() const {

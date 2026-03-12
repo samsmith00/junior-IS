@@ -70,6 +70,7 @@ The conclusion follows the results chapter and will primarly focus on results, f
 on this project. Additionally, this section will provide insight into any errors or unoptimized processes in this project and offer
 any additional improvements or next steps. 
 
+
 \section{Background}
 
 \subsection{Discrete Fourier Transform}
@@ -170,10 +171,25 @@ they typically require a resample step to restore the modified signal to its ori
 These algorithms must incorporate a resmaple step inorder to convert the modified signal back to the original signal's duration \cite{rai2019analysis}. 
 
 
+\section{Phase Vocoder}
+In this section, I will explain the core steps of the phase vocoder algorithm. It will be broken up by the phase coder steps:
+analysis, modification and synthesis. 
 
+\subsection{Anaysis}
+This section will cover signal processing, connect the DFT to the phase vocoder algorithm and conclude with a discussion on windowing
+
+\subsection{Modification}
+In this section I will explain how the phase algorithm uses the phase information obtained from the DFT to perform a more accurate
+frequency transformation. Additionally, the phase information is used to better reconstruct the signal in the resynthesis step
+
+\subsection{Synthesis}
+This section will explain how the phase vocoder algorithm reconstructs the modified signal. It involves reapplying our windowing function and 
+compleating COLA (Constant Overlap-Add)
 
 \section{Methodology}
 %Dijkstra's algorithm was chosen for single-source shortest path computation on graphs with non-negative edge weights, following the implementation presented in CLRS~\cite{clrsAlgorithms}.
+In this section, I will be explaining how the phase vocoder algorithm is implemented in the JUCE framework. This section will be comprised of how JUCE operates on audio signals
+the data structures needed to implement the phase vocoder algorithm, such as circular buffers, how the DFT is computed in JUCE 
 
 \section{Results}
 %An exemplary figure is shown in Figure~\ref{fig:dijkstra}. Any time a figure is used, it must have a capation and be directly referred to and discussed in the text.
