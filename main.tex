@@ -179,7 +179,10 @@ In this section, I will explain the core steps of the phase vocoder algorithm. I
 analysis, modification and synthesis. 
 
 \subsubsection*{Transition Sentences}
-The following section will highlight the inerworkings of the ph
+The following section will highlight the inerworkings of the phase vocoder algorithm. The algorithm is the backbone of the pitch-shifting
+audio plugin, it is a computationally efficient method for analyzing an input audio signal, modifying the frequency content of the signal and 
+resynthesizing the modified signal into an output signal. The following subsections will revisit the mathematical concepts outlied Section 2 and translate the 
+them into practical code.
 
 \subsection{Anaysis}
 This section will cover signal processing, connect the DFT to the phase vocoder algorithm and conclude with a discussion on windowing
@@ -192,6 +195,8 @@ This section will cover signal processing, connect the DFT to the phase vocoder 
 \subsection{Modification}
 In this section I will explain how the phase algorithm uses the phase information obtained from the DFT to perform a more accurate
 frequency transformation. Additionally, the phase information is used to better reconstruct the signal in the resynthesis step
+
+
 
 \subsection{Synthesis}
 This section will explain how the phase vocoder algorithm reconstructs the modified signal. It involves reapplying our windowing function and 
@@ -206,6 +211,11 @@ compleating COLA (Constant Overlap-Add)
 %Dijkstra's algorithm was chosen for single-source shortest path computation on graphs with non-negative edge weights, following the implementation presented in CLRS~\cite{clrsAlgorithms}.
 In this section, I will be explaining how the phase vocoder algorithm is implemented in the JUCE framework. This section will be comprised of how JUCE operates on audio signals
 the data structures needed to implement the phase vocoder algorithm, such as circular buffers, how the DFT is computed in JUCE 
+
+\subsubsection*{Transition Sentences}
+Now that we have unveiled the innerworkings of the phase vocoder algorithm, we will see how it is implemented in the JUCE audio framework
+JUCE is an open-source cross platfrom C++ framework used to develop audio applications and plugins
+
 \begin{itemize}
   \item I built a pitch shifting audio plugin
   \item My goals were to build a real-time, polyphonic pitch shifting plugin that could pitch shift up to 5 semitones (downtune and uptune)
