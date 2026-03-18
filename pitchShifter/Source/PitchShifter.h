@@ -30,6 +30,10 @@ namespace pitchShifter {
             }
         }
 
+        void reset() noexcept {}
+
+        private:
+
     };
 }
 
