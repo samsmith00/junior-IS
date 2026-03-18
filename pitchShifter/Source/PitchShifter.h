@@ -3,8 +3,11 @@
 //
 
 #pragma once
-#include <juce_audio_basics/buffers/juce_AudioSampleBuffer.h>
-#include <juce_core/maths/juce_MathsFunctions.h>
+
+#include <juce_audio_basics/juce_audio_basics.h>
+#include <juce_core/juce_core.h>
+#include <ranges>
+
 
 namespace pitchShifter {
     class PitchShifter {
@@ -34,11 +37,6 @@ namespace pitchShifter {
 
         private:
 
+
     };
 }
-
-
-#ifndef PITCHSHIFTER_PITCHSHIFTER_H
-#define PITCHSHIFTER_PITCHSHIFTER_H
-
-#endif //PITCHSHIFTER_PITCHSHIFTER_H

@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.24)
 project(PitchShifter VERSION 0.0.1)
 
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_XCODE_GENERATE_SCHEME OFF)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
@@ -33,6 +33,7 @@ set(SourceFiles
         Source/PluginEditor.h
         Source/PluginProcessor.cpp
         Source/PluginProcessor.h
+        Source/PitchShifter.h
 )
 
 # Change these to your own preferences
