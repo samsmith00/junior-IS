@@ -12,25 +12,17 @@
 namespace pitchShifter {
     class PitchShifter {
     public:
+        PitchShifter();
+        int getLatencyInSamples() const;
+
         void prepare(double sampleRate, int expectedMaxFramesPerBlock) {
             juce::ignoreUnused (sampleRate, expectedMaxFramesPerBlock);
+
+          reset();
         }
 
-        void process(juce::AudioBuffer<float>& buffer) noexcept {
-            for (const auto frameIndex : std::views::iota(0, buffer.getNumSamples())) {
+        void process(float* channelData, int numSamples ) noexcept {
 
-                for (const auto channelIndex:
-                    std::views::iota(0, buffer.getNumChannels())) {
-                    // get the input sample
-                    const auto inputSample = buffer.getSample(channelIndex, frameIndex);
-
-                    // pass to output sample
-                    const auto outputSample = inputSample;
-
-                    // set the output sample
-                    buffer.setSample(channelIndex, frameIndex, outputSample);
-                }
-            }
         }
 
         void reset() noexcept {}
