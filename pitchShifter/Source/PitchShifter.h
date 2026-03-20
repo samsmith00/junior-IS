@@ -25,7 +25,10 @@ namespace pitchShifter {
         }
 
         void process(float* channelData, int numSamples ) noexcept {
-
+            // loop over channel samples
+            for (int i = 0; i < numSamples; ++i) {
+                float outputSample = processSample(channelData[i]);
+            }
         }
 
         void reset() noexcept {
@@ -56,6 +59,27 @@ namespace pitchShifter {
 
 
 
+        float processSample(float smaple) {
+            inputBuffer[writePtr] = smaple;
+
+            float outputSample = outputBuffer[writePtr];
+            outputBuffer[writePtr] = 0.0f;
+
+            writePtr++;
+            if (writePtr >= fftSize) {
+                writePtr = 0;
+            }
+
+            hopCount++;
+            if (hopCount >= hopSize) {
+                hopCount = 0;
+                processFrame();
+            }
+
+            return outputSample;
+        }
+
+        void processFrame() {}
 
 
 
