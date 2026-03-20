@@ -61,9 +61,12 @@ namespace pitchShifter {
         std::array<float, fftSize * 2> fftDat;    // pass data to and from FFT object
 
 
-
-        float processSample(float smaple) {
-            inputBuffer[writePtr] = smaple;
+        // processes channel's samples
+        // write input sample to input buffer
+        // computes fft if hopCount reaches hopSize
+        // returns output sample to write back to main Audio Buffer
+        float processSample(float sample) {
+            inputBuffer[writePtr] = sample;
 
             float outputSample = outputBuffer[writePtr];
             outputBuffer[writePtr] = 0.0f;
