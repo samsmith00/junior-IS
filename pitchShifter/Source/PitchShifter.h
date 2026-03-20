@@ -50,6 +50,9 @@ namespace pitchShifter {
         juce::dsp::FFT fft;
         juce::dsp::WindowingFunction<float> window;
 
+        static constexpr float windowCorrection = 2.0f / 3.0f;
+
+
         // circular buffers
         int writePtr = 0;                        // keeps track of current write pos (POS IN BLOG)
         int hopCount = 0;                        // keeps track of when to perform fft (COUNT IN BLOG)
