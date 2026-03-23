@@ -85,7 +85,39 @@ namespace pitchShifter {
             return outputSample;
         }
 
-        void processFrame() {}
+        // compute fft of signal chunk
+        void processFrame() {
+            const float* inputPtr = inputBuffer.data();
+            float* fftPtr = fftData.data();
+
+            // unwrap inputBuffer into fftData (chronological order)
+            for (int i = 0; i < fftSize; ++i) {
+                int bufferIndex = (writePtr + i) % fftSize;
+                fftData[i] = inputPtr[bufferIndex];
+            }
+
+            window.multiplyWithWindowingTable(fftPtr, fftSize);
+
+            fft.performRealOnlyForwardTransform(fftPtr, true);
+
+            fft.performRealOnlyInverseTransform(fftPtr);
+
+            window.multiplyWithWindowingTable(fftPtr, fftSize);
+
+            for (int i = 0; i < fftSize; ++i) {
+                fftPtr[i] *= windowCorrection;
+            }
+
+            for (int i = 0; i < writePtr; ++i) {
+                outputBuffer[i] = fftData[i + fftSize - writePtr];
+            }
+
+            for (int i = 0; i < writePtr; ++i) {
+                outputBuffer[i + writePtr] = fftData[i];
+            }
+
+
+        }
 
 
 
