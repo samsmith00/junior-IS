@@ -54,11 +54,11 @@ namespace pitchShifter {
 
 
         // circular buffers
-        int writePtr = 0;                        // keeps track of current write pos (POS IN BLOG)
-        int hopCount = 0;                        // keeps track of when to perform fft (COUNT IN BLOG)
-        std::array<float, fftSize> inputBuffer;  // contains input samples
-        std::array<float, fftSize> outputBuffer; // contains output samples
-        std::array<float, fftSize * 2> fftDat;    // pass data to and from FFT object
+        int writePtr = 0;                         // keeps track of current write pos (POS IN BLOG)
+        int hopCount = 0;                         // keeps track of when to perform fft (COUNT IN BLOG)
+        std::array<float, fftSize> inputBuffer;   // contains input samples
+        std::array<float, fftSize> outputBuffer;  // contains output samples
+        std::array<float, fftSize * 2> fftData;   // pass data to and from FFT object
 
 
         // processes channel's samples
