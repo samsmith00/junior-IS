@@ -70,15 +70,9 @@ namespace pitchShifter {
         float processSample(float sample) {
             inputBuffer[inputWritePtr] = sample;
 
-            writePtr++;
-            if (writePtr >= fftSize) {
-                writePtr = 0;
-            }
-
-            hopCount++;
-            if (hopCount >= hopSize) {
-                hopCount = 0;
-                processFrame();
+            inputWritePtr++;
+            if (inputWritePtr >= bufferSize) {
+                inputWritePtr = 0;
             }
 
             return outputSample;
