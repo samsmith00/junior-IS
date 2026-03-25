@@ -117,8 +117,10 @@ namespace pitchShifter {
                 fftPtr[i] *= windowCorrection;
             }
 
-            for (int i = 0; i < writePtr; ++i) {
-                outputBuffer[i] = fftData[i + fftSize - writePtr];
+            // copy new block of samples into output buffer
+            for (int i = 0; i < fftSize; ++i) {
+                int idx = (i + outputWritePtr) % bufferSize;
+                outputBuffer[idx] += fftData[i];
             }
 
             for (int i = 0; i < writePtr; ++i) {
