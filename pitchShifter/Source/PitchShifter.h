@@ -75,6 +75,22 @@ namespace pitchShifter {
                 inputWritePtr = 0;
             }
 
+            float outputSample = outputBuffer[outputReadPtr];
+            outputBuffer[outputReadPtr] = 0;
+
+            outputReadPtr++;
+            if (outputReadPtr >= bufferSize) { // or fftSize
+                outputReadPtr = 0;
+            }
+
+            inputHopCount++;
+            if (inputHopCount >= hopSize) {
+                inputHopCount = 0;
+                processFrame();
+                outputWritePtr = (outputWritePtr + hopSize) % bufferSize; // or fftSize
+            }
+
+            // write to output audio buffer or return what needs to be written
             return outputSample;
         }
 
