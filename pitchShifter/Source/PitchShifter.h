@@ -27,7 +27,7 @@ namespace pitchShifter {
         void process(float* channelData, int numSamples) noexcept {
             // loop over channel samples
             for (int i = 0; i < numSamples; ++i) {
-                float outputSample = processSample(channelData[i]);
+                channelData[i] = processSample(channelData[i]);
             }
         }
 
