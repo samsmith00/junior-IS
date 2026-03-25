@@ -32,8 +32,10 @@ namespace pitchShifter {
         }
 
         void reset() noexcept {
-            writePtr = 0;
-            hopCount = 0;
+            inputWritePtr = 0;
+            inputHopCount = 0;
+            outputWritePtr = hopSize;
+            outputReadPtr = 0;
             std::fill(inputBuffer.begin(), inputBuffer.end(), 0.0f);
             std::fill(outputBuffer.begin(), outputBuffer.end(), 0.0f);
         }
