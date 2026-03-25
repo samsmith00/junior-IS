@@ -101,7 +101,7 @@ namespace pitchShifter {
 
             // unwrap inputBuffer into fftData (chronological order)
             for (int i = 0; i < fftSize; ++i) {
-                int bufferIndex = (writePtr + i) % fftSize;
+                int bufferIndex = (inputWritePtr + i - fftSize + bufferSize) % bufferSize;
                 fftData[i] = inputPtr[bufferIndex];
             }
 
