@@ -68,10 +68,7 @@ namespace pitchShifter {
         // computes fft if hopCount reaches hopSize
         // returns output sample to write back to main Audio Buffer
         float processSample(float sample) {
-            inputBuffer[writePtr] = sample;
-
-            float outputSample = outputBuffer[writePtr];
-            outputBuffer[writePtr] = 0.0f;
+            inputBuffer[inputWritePtr] = sample;
 
             writePtr++;
             if (writePtr >= fftSize) {
