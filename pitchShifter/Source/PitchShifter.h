@@ -52,7 +52,7 @@ namespace pitchShifter {
         juce::dsp::FFT fft;
         juce::dsp::WindowingFunction<float> window;
 
-        static constexpr float windowCorrection = 2.0f / 3.0f;
+        static constexpr float windowCorrection = static_cast<float>(hopSize) / static_cast<float>(fftSize);
 
 
         // circular buffers
