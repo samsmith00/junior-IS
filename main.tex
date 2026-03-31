@@ -166,14 +166,18 @@ approximation the accuracy of the frequency estimation is increased \cite{lim200
 
 \subsection{Alternative Pitch-Shifting Methods}
 
-The prior sections highlight the phase vocoder approach to pitch-shifting, a frequency-domain algorithm 
-that converts a signal from the time domain to the frequency domain to compute the pitch shift. 
-An alternative approach uses time-scale modification (TSM) algorithms, which operate entirely in the time domain \cite{rai2019analysis}. 
-Two common algorithms belonging to the TSM family are Waveform Similarity based Overlap-Add (WSOLA) and Pitch Synchronous Overlap and Add (PSOLA) \cite{rai2019analysis}.
-Since TSM algorithms are more naturally suited to speed changes, 
-they typically require a resample step to restore the modified signal to its original duration \cite{rai2019analysis}. 
-These algorithms must incorporate a resmaple step inorder to convert the modified signal back to the original signal's duration \cite{rai2019analysis}. 
+The prior sections highlight the phase vocoder approach to pitch-shifting, a frequency-domain algorithm that 
+converts a signal from the time domain to the frequency domain to compute the pitch shift. An alternative approach uses time-scale modification (TSM) algorithms,
+ which operate entirely in the time domain \cite{rai2019analysis}. 
+ A common algorithm belonging to the TSM family is the Overlap-Add (OLA) algorithm \cite{royer2019pitch}.
 
+The idea behind these algorithms is that pitch shifting and time scaling are essentially the same; meaning if you have one, 
+either a pitch shifter or time scaler, then you effectively have the other. OLA makes use of this paradigm. The algorithm first partitions the input signal into frames, much like the STFT. 
+Then, if the goal is to pitch down the signal, when resynthesizing the signal it is constructed in such a way that extra space is added between the reconstructed frames, increasing the length of the signal. 
+On the contrary, if the goal is to make the signal's pitch higher, then the algorithm reconstructs the signal in such a way where the space between contiguous frames is reduced, effectively shortening the signal's length \cite{royer2019pitch}.
+
+Since TSM algorithms operate in the time domain and thus change the input signal's duration, either lengthening or shortening it, these algorithms must incorporate a resample step in order to convert the modified signal back to the original signal's duration \cite{rai2019analysis}.
+ Thus, these alternative algorithms are viable options; however, purely TSM-based algorithms are often outperformed by frequency-based algorithms \cite{royer2019pitch}.
 
 \section{Phase Vocoder}
 In this section, I will explain the core steps of the phase vocoder algorithm. It will be broken up by the phase coder steps:
