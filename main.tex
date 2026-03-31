@@ -177,21 +177,23 @@ Then, if the goal is to pitch down the signal, when resynthesizing the signal it
 On the contrary, if the goal is to make the signal's pitch higher, then the algorithm reconstructs the signal in such a way where the space between contiguous frames is reduced, effectively shortening the signal's length \cite{royer2019pitch}.
 
 Since TSM algorithms operate in the time domain and thus change the input signal's duration, either lengthening or shortening it, these algorithms must incorporate a resample step in order to convert the modified signal back to the original signal's duration \cite{rai2019analysis}.
- Thus, these alternative algorithms are viable options; however, purely TSM-based algorithms are often outperformed by frequency-based algorithms \cite{royer2019pitch}.
+Thus, these alternative algorithms are viable options; however, purely TSM-based algorithms are often outperformed by frequency-based algorithms \cite{royer2019pitch}.
 
 \section{Phase Vocoder}
-In this section, I will explain the core steps of the phase vocoder algorithm. It will be broken up by the phase coder steps:
-analysis, modification and synthesis. 
+% In this section, I will explain the core steps of the phase vocoder algorithm. It will be broken up by the phase coder steps:
+% analysis, modification and synthesis. 
 
-The phase vocoder is a name given to a group of algorithms designed to processes an input signal in the frequency domain \cite{reiss2014audioeffects}. 
+The phase vocoder is a name given to a group of algorithms designed to process an input signal in the frequency domain \cite{reiss2014audioeffects}. This paper specifically focuses on the application of pitch shifting, the process of either increasing or decreasing an audio signal's pitch. 
+In particular, this work utilizes a phase vocoder-based pitch shifting algorithm, as it is a computationally efficient method for analyzing and modifying an input audio signal, and is the backbone of many real-time pitch shifting audio plugins used today \cite{royer2019pitch}.
 
-\subsubsection*{Transition Sentences}
-The following section will highlight the inerworkings of the phase vocoder algorithm. The algorithm is the backbone of the pitch-shifting
-audio plugin, it is a computationally efficient method for analyzing an input audio signal, modifying the frequency content of the signal and 
-resynthesizing the modified signal into an output signal. The following subsections will revisit the mathematical concepts outlied Section 2 and translate the 
-them into practical code.
 
-\subsection{Anaysis}
+The following subsections will explain the inner workings of the phase vocoder algorithm and its application to pitch shifting. 
+The first subsection will explain the analysis step and how the STFT breaks an audio signal into frames. 
+The second subsection will cover the modification step and explain how pitch shifting is computed in the frequency domain. 
+Finally, the last subsection will explain how the modified signal is synthesized back into an output signal.
+
+
+\subsection{Analysis}
 This section will cover signal processing, connect the DFT to the phase vocoder algorithm and conclude with a discussion on windowing
 \begin{itemize}
   \item Perform block-based processing to analyze just a chuck of the incoming audio buffer
