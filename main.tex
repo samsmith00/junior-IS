@@ -194,7 +194,16 @@ Finally, the last subsection will explain how the modified signal is synthesized
 
 
 \subsection{Analysis}
-This section will cover signal processing, connect the DFT to the phase vocoder algorithm and conclude with a discussion on windowing
+The first step of the phase vocoder algorithm is the analysis step. The primary goal of this step is to break an 
+input audio signal into a succession of overlapping frames so that each frame is processed individually. The STFT is used 
+to window the audio signal and convert each signal frame from the time domain to the frequency domain. It is crucial to use the 
+STFT in this step, as oppose to the FFT, due to the fact that in a real-time environment the plugin does not have access to the entire
+audio signal. An audio signal is continuously fed into the program, thus it is only concerned with the composition of the signal at a local instance. 
+
+
+
+
+% This section will cover signal processing, connect the DFT to the phase vocoder algorithm and conclude with a discussion on windowing
 \begin{itemize}
   \item Perform block-based processing to analyze just a chuck of the incoming audio buffer
   \item Apply the windowing function to reduce spectral leakage
