@@ -89,16 +89,21 @@ void AudioPluginAudioProcessor::prepareToPlay (double sampleRate, int samplesPer
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
     //juce::ignoreUnused (sampleRate, samplesPerBlock);
-    setLatencySamples(pitchShifter.getLatencyInSamples());
 
-    pitchShifter.prepare(sampleRate, samplesPerBlock);
+    //setLatencySamples(pitchShifter.getLatencyInSamples());
+
+    pitchShifter[0].prepare(sampleRate, samplesPerBlock);
+    pitchShifter[1].prepare(sampleRate, samplesPerBlock);
+
 }
 
 void AudioPluginAudioProcessor::releaseResources()
 {
     // When playback stops, you can use this as an opportunity to free up any
     // spare memory, etc.
-    pitchShifter.reset();
+    pitchShifter[0].reset();
+    pitchShifter[1].reset();
+
 }
 
 bool AudioPluginAudioProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const

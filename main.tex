@@ -169,6 +169,7 @@ approximation the accuracy of the frequency estimation is increased \cite{lim200
 The prior sections highlight the phase vocoder approach to pitch-shifting, a frequency-domain algorithm 
 that converts a signal from the time domain to the frequency domain to compute the pitch shift. 
 An alternative approach uses time-scale modification (TSM) algorithms, which operate entirely in the time domain \cite{rai2019analysis}. 
+Two common algorithms belonging to the TSM family are Waveform Similarity based Overlap-Add (WSOLA) and Pitch Synchronous Overlap and Add (PSOLA) \cite{rai2019analysis}.
 Since TSM algorithms are more naturally suited to speed changes, 
 they typically require a resample step to restore the modified signal to its original duration \cite{rai2019analysis}. 
 These algorithms must incorporate a resmaple step inorder to convert the modified signal back to the original signal's duration \cite{rai2019analysis}. 
@@ -177,6 +178,8 @@ These algorithms must incorporate a resmaple step inorder to convert the modifie
 \section{Phase Vocoder}
 In this section, I will explain the core steps of the phase vocoder algorithm. It will be broken up by the phase coder steps:
 analysis, modification and synthesis. 
+
+The phase vocoder is a name given to a group of algorithms designed to processes an input signal in the frequency domain \cite{reiss2014audioeffects}. 
 
 \subsubsection*{Transition Sentences}
 The following section will highlight the inerworkings of the phase vocoder algorithm. The algorithm is the backbone of the pitch-shifting

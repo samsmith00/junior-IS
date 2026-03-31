@@ -8,6 +8,8 @@
 #include <juce_core/juce_core.h>
 #include <juce_dsp/juce_dsp.h>
 #include <ranges>
+#include <iostream>
+
 
 
 namespace pitchShifter {
@@ -15,7 +17,9 @@ namespace pitchShifter {
     public:
         PitchShifter() :
         fft(fftOrder),
-        window(fftSize + 1, juce::dsp::WindowingFunction<float>::WindowingMethod:: hann, false){}
+        window(fftSize, juce::dsp::WindowingFunction<float>::hann)
+        {
+        }
 
         int getLatencyInSamples() const;
 
@@ -44,7 +48,6 @@ namespace pitchShifter {
         // FFT variables
         static constexpr int fftOrder = 10;
         static constexpr int fftSize = 1 << fftOrder;      // 1024 samples
-        static constexpr int numBins = fftSize / 2 + 1;    // 513 bins (Nyquist frequency)
         static constexpr int overlap = 4;                  // 75% overlap
         static constexpr int hopSize = fftSize / overlap;  // 256 samples
 
@@ -65,7 +68,7 @@ namespace pitchShifter {
 
         std::array<float, bufferSize> inputBuffer;   // contains input samples
         std::array<float, bufferSize> outputBuffer;  // contains output samples, size larger than needs to be
-        std::array<float, fftSize * 2> fftData;   // pass data to and from FFT object
+        std::array<float, fftSize * 2> fftData;      // pass data to and from FFT object
 
 
         // processes channel's samples
@@ -104,7 +107,7 @@ namespace pitchShifter {
             const float* inputPtr = inputBuffer.data();
             float* fftPtr = fftData.data();
 
-            // unwrap inputBuffer into fftData (chronological order)
+            // unwrap inputBuffer into fftData (look backwards one window size)
             for (int i = 0; i < fftSize; ++i) {
                 int bufferIndex = (inputWritePtr + i - fftSize + bufferSize) % bufferSize;
                 fftData[i] = inputPtr[bufferIndex];
@@ -113,6 +116,8 @@ namespace pitchShifter {
             window.multiplyWithWindowingTable(fftPtr, fftSize);
 
             fft.performRealOnlyForwardTransform(fftPtr, true);
+
+            pitchShift();
 
             fft.performRealOnlyInverseTransform(fftPtr);
 
@@ -127,16 +132,12 @@ namespace pitchShifter {
                 int idx = (i + outputWritePtr) % bufferSize;
                 outputBuffer[idx] += fftData[i];
             }
+        }
 
-            for (int i = 0; i < writePtr; ++i) {
-                outputBuffer[i + writePtr] = fftData[i];
-            }
+        void pitchShift() {
+            float* fftPtr = fftData.data();
 
 
         }
-
-
-
-
     };
 }
