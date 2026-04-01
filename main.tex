@@ -89,16 +89,20 @@ Mathematically, the DFT is defined as:
 where $N$ is the number of samples from the input signal $x[n]$, $n$ denotes the time-domain index, $m$ represents the frequency bin index, 
 $n$ is the index of the input sequenc in the time-domain and $j = \sqrt{-1}$. Each coeffecient in $X[m]$ is complex-valued and can be 
 expressed in terms of magnitude and phase, which describe the contribution of a corresponding frequency component to the overall signal \cite{mcfee_dstbook}.
-
-
-\begin{itemize}
-  \item Talk about inverse DFT
-\end{itemize}
+Another important property of the DFT is that it is invertable; meaning a signal can be transformed from the frequency domain to the time domain. It can be described
+mathematically as: 
+\begin{align}
+  x[n] = \frac{1}{N} \sum_{n=0}^{N-1} X[m] \, e^{j 2\pi n\frac{m}{N}}
+\end{align}
+Since the forward direction of the DTF breaks a signal into its fundamental sinusoids, the inverse DFT perfoms the opposit.
+It computes each component of a signal $x[n]$ as the average of the $n$th samples of the DFT's fundamental sinusoids \cite{mcfee_dstbook}.
+The inverse DFT is a curcial component of the phase vocoder as it allows for a signal to be transformed back to the time domain after being modified
+in the frequency domain. 
 
 \subsection{Windowing}
 Windowing is a function used to isolate parts of a discrete time signal so that analysis on the signal can be performed on contiguous blocks \cite{barry2008time}.
-More specifically, the input signal is multiplied by a windowing function whose domain is nonzero for a particular range. This results in a small localized snapshot of the input signal,
-and every other value outside of the windows domain is reduced to zero \cite{royer2019pitch}. Figure 1 below demonstrates the functionality of a window function. 
+More specifically, the input signal is multiplied by a windowing function whose domain is nonzero for a particular range. This results in a small localized snapshot of the input signal
+where every value outside of the window's domain is reduced to zero \cite{royer2019pitch}. Figure 1 below demonstrates the functionality of a window function. 
 
 \begin{figure}[H] 
 \begin{center}
@@ -110,7 +114,11 @@ and every other value outside of the windows domain is reduced to zero \cite{roy
 \end{figure}
 
 As depicted  by Figure~\ref{fig:non-windowed-and-windowed}, after applying the window function to the example signal, the edges of the signal
-tend toward zero. In this example, the Hann window function was used to shape the signal, however, there are multiple windowing functions
+tend toward zero. This functionality of the window function is crucial for making the phase vocoder operate correctly. When computing the DFT of an input 
+signal, it assumes that the signal is periodic. 
+
+
+In this example, the Hann window function was used to shape the signal, however, there are multiple windowing functions
 such as the Rectangle window function, Triangle window function and Hamming window function \cite{mcfee_dstbook}. For this project, the Hanning
 window will be employed as it yields a more smooth, continuous signal during the resynthesis step \cite{degotzen2000traditional}.
 \begin{itemize}
