@@ -87,16 +87,16 @@ Mathematically, the DFT is defined as:
   X[m] = \sum_{n=0}^{N-1} x[n] \, e^{-j 2\pi n\frac{m}{N}}
 \end{align}
 where $N$ is the number of samples from the input signal $x[n]$, $n$ denotes the time-domain index, $m$ represents the frequency bin index, 
-$n$ is the index of the input sequenc in the time-domain and $j = \sqrt{-1}$. Each coeffecient in $X[m]$ is complex-valued and can be 
+$n$ is the index of the input sequence in the time-domain and $j = \sqrt{-1}$. Each coefficient in $X[m]$ is complex-valued and can be 
 expressed in terms of magnitude and phase, which describe the contribution of a corresponding frequency component to the overall signal \cite{mcfee_dstbook}.
-Another important property of the DFT is that it is invertable; meaning a signal can be transformed from the frequency domain to the time domain. It can be described
+Another important property of the DFT is that it is invertible; meaning a signal can be transformed from the frequency domain to the time domain. It can be described
 mathematically as: 
 \begin{align}
   x[n] = \frac{1}{N} \sum_{n=0}^{N-1} X[m] \, e^{j 2\pi n\frac{m}{N}}
 \end{align}
-Since the forward direction of the DTF breaks a signal into its fundamental sinusoids, the inverse DFT perfoms the opposit.
+Since the forward direction of the DTF breaks a signal into its fundamental sinusoids, the inverse DFT perfoms the opposite.
 It computes each component of a signal $x[n]$ as the average of the $n$th samples of the DFT's fundamental sinusoids \cite{mcfee_dstbook}.
-The inverse DFT is a curcial component of the phase vocoder as it allows for a signal to be transformed back to the time domain after being modified
+The inverse DFT is a crucial component of the phase vocoder as it allows for a signal to be transformed back to the time domain after being modified
 in the frequency domain. 
 
 \subsection{Windowing}
@@ -126,9 +126,9 @@ In Figure~\ref{fig:non-windowed-and-windowed}, the Hann window function was used
 such as the Rectangle window function, Triangle window function and Hamming window function \cite{mcfee_dstbook}. For this project, the Hanning window will be employed, 
 as it produces a smoother and more continuous signal during the resynthesis step \cite{degotzen2000traditional}.
 
-\begin{itemize}
-  \item Further explain how windowing prevents spectral leakage and why we need it (prevents artifacts, fft assumes signal is periodic, does not work if not continuous at edges)
-\end{itemize}
+% \begin{itemize}
+%   \item Further explain how windowing prevents spectral leakage and why we need it (prevents artifacts, fft assumes signal is periodic, does not work if not continuous at edges)
+% \end{itemize}
 
 \subsection{Short-Time Fourier Transform}
 The Short-Time Fourier Transform (STFT) is a time-frequency representation used to compute the DFT of contiguous windowed segments of a signal. 
@@ -141,9 +141,11 @@ and how the output is interpreted. Below is the STFT:
 Where $X[m, k]$ is the 2-dimensional output array indexed by both frequency bin and time frame and $x[n + kH]$ is the section of the input signal 
 determined by frame index and hop size \cite{royer2019pitch}. The outcome of the STFT is a representation that transforms a signal from the time 
 domain to the frequency domain. In this form, the signal's frequency components can be systematically modified and recombined to reconstruct a new signal.  
-\begin{itemize}
-  \item talk about inverse STFT
-\end{itemize} 
+Similar to the DFT, the STFT also posesses an inverse. However, instead of reconstructing the entier signal, the inverse STFT only reconstructs a particular
+chunk of a signal. 
+% \begin{itemize}
+%   \item talk about inverse STFT
+% \end{itemize} 
 
 
 \section{Related Works}
