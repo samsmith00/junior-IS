@@ -213,14 +213,6 @@ The output of the analysis step is a collection of $M$ frequency bins (see Secti
 the magnitude and phase information for a particular frequency \cite{reiss2014audioeffects}. At this point, the signal frame can be modified in the 
 frequency domain, such as altering the pitch.
 
-% It is crucial to use the 
-% STFT in this step, as oppose to the FFT, due to the fact that in a real-time environment the plugin does not have access to the entire
-% audio signal. An audio signal is continuously fed into the program, thus it is only concerned with the composition of the signal at a local instance. 
-
-
-% The window function that will be used in conjunction with the FFT will be the Hann window as it provides a good balance between the width of the 
-% central frequency lobe and height of the sidelobes \cite{degotzen2000traditional}.
-
 
 % This section will cover signal processing, connect the DFT to the phase vocoder algorithm and conclude with a discussion on windowing
 \begin{itemize}
@@ -238,19 +230,28 @@ frequency transformation. Additionally, the phase information is used to better 
 \subsection{Synthesis}
 
 Once the signal frame has been modified, the IFFT converts the signal back to the time domain. Then the output is reconstructed using
-the Constant Overlapp-Add (COLA) paradigm. A detailed explanation of COLA can be found here \cite{smith2011sasp}. The key idea is that 
-if samples in the window function, offset by $H$, add to a constant $C$, then the window posseses the "Constant Overlap-Add Property" \cite{smith2011sasp}. The 
+the Constant Overlap-Add (COLA) paradigm. A detailed explanation of COLA can be found here \cite{smith2011sasp}. The key idea is that 
+if samples in the window function, offset by $H$, add to a constant $C$, then the window possesses the "Constant Overlap-Add Property" \cite{smith2011sasp}. The 
 mathematical expression below demonstrates the COLA property: 
 \begin{align}
   \sum_{m=-\infty}^{\infty} w(n - mH) = 1, \quad \forall n \in \mathbb{Z}
 \end{align}
-This project employs the Hanning window function with a $75\%$ overlap. To prove it posseses the COLA property 
+This project employs the Hanning window function with a $75\%$ overlap. To prove it possesses the COLA property we can graph several hanning window functions 
+with a $75\%$ overlap and their corresponding overlap value. Figure 2 shows that by graphing $5$ hanning window functions with a $75\%$ overlap satisfies the COLA property, while a $66.67$\% ($\frac{2}{3}$) overlap 
+does not.
+
+\begin{itemize}
+  \item FIGURE 2 HERE ONCE COMPLETE
+\end{itemize}
+To reconstruct the output signal, the values from the inverse STFT are first added into an output buffer. This buffer serves as temporary storage; it is not the final synthesized audio signal. 
+The output buffer is necessary because, due to overlapping windows ensured by the COLA property, certain samples are calculated as the sum of multiple windows. Once the samples have been correctly accumulated in the buffer,
+ a write pointer is used to read them sequentially, producing the final output signal.
 
 % COLA is a technique that ensures the original input audio signal can be perfectly reconstructed 
 % after windowing it into frames \cite{smith2011sasp}. 
 
-This section will explain how the phase vocoder algorithm reconstructs the modified signal. It involves reapplying our windowing function and 
-compleating COLA (Constant Overlap-Add)
+% This section will explain how the phase vocoder algorithm reconstructs the modified signal. It involves reapplying our windowing function and 
+% compleating COLA (Constant Overlap-Add)
 \begin{itemize}
   \item After performing the frequency transformation step, we take the inverse DFT of the signal to convert it back into the time-domain
   \item We also apply the windowing function again to ensure that when we recombine the signal the edges of contiguous blocks line up
