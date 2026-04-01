@@ -90,6 +90,7 @@ where $N$ is the number of samples from the input signal $x[n]$, $n$ denotes the
 $n$ is the index of the input sequenc in the time-domain and $j = \sqrt{-1}$. Each coeffecient in $X[m]$ is complex-valued and can be 
 expressed in terms of magnitude and phase, which describe the contribution of a corresponding frequency component to the overall signal \cite{mcfee_dstbook}.
 
+
 \begin{itemize}
   \item Talk about inverse DFT
 \end{itemize}
@@ -236,16 +237,16 @@ mathematical expression below demonstrates the COLA property:
 \begin{align}
   \sum_{m=-\infty}^{\infty} w(n - mH) = 1, \quad \forall n \in \mathbb{Z}
 \end{align}
-This project employs the Hanning window function with a $75\%$ overlap. To prove it possesses the COLA property we can graph several hanning window functions 
-with a $75\%$ overlap and their corresponding overlap value. Figure 2 shows that by graphing $5$ hanning window functions with a $75\%$ overlap satisfies the COLA property, while a $66.67$\% ($\frac{2}{3}$) overlap 
-does not.
+This project employs the Hanning window function with a $75\%$ overlap. To prove it possesses the COLA property we can graph several Hanning window functions 
+with a $75\%$ overlap and their corresponding overlap value. Figure 2 shows that by graphing five Hanning window functions with a $75\%$ overlap satisfies the COLA property. Notice a $66.67$\% ($\frac{2}{3}$) overlap 
+does not work as the sum of the samples fluctuates.
 
 \begin{itemize}
   \item FIGURE 2 HERE ONCE COMPLETE
 \end{itemize}
 To reconstruct the output signal, the values from the inverse STFT are first added into an output buffer. This buffer serves as temporary storage; it is not the final synthesized audio signal. 
-The output buffer is necessary because, due to overlapping windows ensured by the COLA property, certain samples are calculated as the sum of multiple windows. Once the samples have been correctly accumulated in the buffer,
- a write pointer is used to read them sequentially, producing the final output signal.
+The output buffer is necessary because, due to overlapping windows ensured by the COLA property, certain samples are calculated as the sum of multiple windows. Once the samples have been correctly added in the buffer,
+a write pointer is used to read them sequentially, producing the final output signal.
 
 % COLA is a technique that ensures the original input audio signal can be perfectly reconstructed 
 % after windowing it into frames \cite{smith2011sasp}. 
