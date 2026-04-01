@@ -195,14 +195,13 @@ Finally, the last subsection will explain how the modified signal is synthesized
 
 \subsection{Analysis}
 The first step of the phase vocoder algorithm is the analysis step. The primary goal of this step is to break an input audio signal 
-into a succession of overlapping frames so that each frame is processed individually. 
-The STFT is used to break the input audio signal into frames so that each frame may be processed individually. 
-In practice, the input audio signal is partitioned into frames of length $N$
+into a succession of overlapping frames so that each frame is processed individually.  
+In practice, the STFT is used to partition the audio signal into frames of length $N$.
 This is accomplished by multiplying the signal frame by the Hann window function. Once the signal frame has been isolated, 
-the FFT is computed on the signal chunk, converting it from the time domain to the frequency domain.
+the FFT is computed on the windowed signal chunk, converting it from the time domain to the frequency domain.
 
 The output of the analysis step is a collection of $M$ frequency bins (see Section 2.3), where each bin contains a complex value representing
- the magnitude and phase information for a particular frequency \cite{reiss2014audioeffects}.
+the magnitude and phase information for a particular frequency \cite{reiss2014audioeffects}.
 
 % It is crucial to use the 
 % STFT in this step, as oppose to the FFT, due to the fact that in a real-time environment the plugin does not have access to the entire
