@@ -10,6 +10,7 @@
 \usepackage{graphicx}
 \usepackage{float}
 \usepackage{amsmath}
+\usepackage{amssymb}
 
 \title{\textbf{A Phase Vocoder Approach To Pitch Shifting}}
 \author{Sam Smith}
@@ -224,7 +225,7 @@ frequency domain, such as altering the pitch.
 % This section will cover signal processing, connect the DFT to the phase vocoder algorithm and conclude with a discussion on windowing
 \begin{itemize}
   \item Perform block-based processing to analyze just a chuck of the incoming audio buffer
-  \item Apply the windowing function to reduce spectral leakage
+  \item Apply the windowing function to reduce spectral leakage (explain in windowing section)
   \item The result will be a frequency-domain representation of the signal chunk, this is the correct representation for preforming frequency transformations
 \end{itemize}
 
@@ -237,8 +238,16 @@ frequency transformation. Additionally, the phase information is used to better 
 \subsection{Synthesis}
 
 Once the signal frame has been modified, the IFFT converts the signal back to the time domain. Then the output is reconstructed using
-the Constant Overlapp-Add (COLA) paradigm. COLA is a technique that ensures the original input audio signal can be perfectly reconstructed 
-after windowing it into frames \cite{}. 
+the Constant Overlapp-Add (COLA) paradigm. A detailed explanation of COLA can be found here \cite{smith2011sasp}. The key idea is that 
+if samples in the window function, offset by $H$, add to a constant $C$, then the window posseses the "Constant Overlap-Add Property" \cite{smith2011sasp}. The 
+mathematical expression below demonstrates the COLA property: 
+\begin{align}
+  \sum_{m=-\infty}^{\infty} w(n - mH) = 1, \quad \forall n \in \mathbb{Z}
+\end{align}
+This project employs the Hanning window function with a $75\%$ overlap. To prove it posseses the COLA property 
+
+% COLA is a technique that ensures the original input audio signal can be perfectly reconstructed 
+% after windowing it into frames \cite{smith2011sasp}. 
 
 This section will explain how the phase vocoder algorithm reconstructs the modified signal. It involves reapplying our windowing function and 
 compleating COLA (Constant Overlap-Add)
