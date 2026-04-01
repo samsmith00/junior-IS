@@ -89,6 +89,10 @@ where $N$ is the number of samples from the input signal $x[n]$, $n$ denotes the
 $n$ is the index of the input sequenc in the time-domain and $j = \sqrt{-1}$. Each coeffecient in $X[m]$ is complex-valued and can be 
 expressed in terms of magnitude and phase, which describe the contribution of a corresponding frequency component to the overall signal \cite{mcfee_dstbook}.
 
+\begin{itemize}
+  \item Talk about inverse DFT
+\end{itemize}
+
 \subsection{Windowing}
 Windowing is a function used to isolate parts of a discrete time signal so that analysis on the signal can be performed on contiguous blocks \cite{barry2008time}.
 More specifically, the input signal is multiplied by a windowing function whose domain is nonzero for a particular range. This results in a small localized snapshot of the input signal,
@@ -121,7 +125,10 @@ and how the output is interpreted. Below is the STFT:
 \end{align}
 Where $X[m, k]$ is the 2-dimensional output array indexed by both frequency bin and time frame and $x[n + kH]$ is the section of the input signal 
 determined by frame index and hop size \cite{royer2019pitch}. The outcome of the STFT is a representation that transforms a signal from the time 
-domain to the frequency domain. In this form, the signal's frequency components can be systematically modified and recombined to reconstruct a new signal.   
+domain to the frequency domain. In this form, the signal's frequency components can be systematically modified and recombined to reconstruct a new signal.  
+\begin{itemize}
+  \item talk about inverse STFT
+\end{itemize} 
 
 
 \section{Related Works}
@@ -198,10 +205,12 @@ The first step of the phase vocoder algorithm is the analysis step. The primary 
 into a succession of overlapping frames so that each frame is processed individually.  
 In practice, the STFT is used to partition the audio signal into frames of length $N$.
 This is accomplished by multiplying the signal frame by the Hann window function. Once the signal frame has been isolated, 
-the FFT is computed on the windowed signal chunk, converting it from the time domain to the frequency domain.
+the FFT is computed on the windowed signal chunk, converting it from the time domain to the frequency domain. To process the next frame, 
+the analysis window moves ahead by $H$ (hop size) number of samples.
 
 The output of the analysis step is a collection of $M$ frequency bins (see Section 2.3), where each bin contains a complex value representing
-the magnitude and phase information for a particular frequency \cite{reiss2014audioeffects}.
+the magnitude and phase information for a particular frequency \cite{reiss2014audioeffects}. At this point, the signal frame can be modified in the 
+frequency domain, such as altering the pitch.
 
 % It is crucial to use the 
 % STFT in this step, as oppose to the FFT, due to the fact that in a real-time environment the plugin does not have access to the entire
@@ -226,6 +235,11 @@ frequency transformation. Additionally, the phase information is used to better 
 
 
 \subsection{Synthesis}
+
+Once the signal frame has been modified, the IFFT converts the signal back to the time domain. Then the output is reconstructed using
+the Constant Overlapp-Add (COLA) paradigm. COLA is a technique that ensures the original input audio signal can be perfectly reconstructed 
+after windowing it into frames \cite{}. 
+
 This section will explain how the phase vocoder algorithm reconstructs the modified signal. It involves reapplying our windowing function and 
 compleating COLA (Constant Overlap-Add)
 \begin{itemize}
