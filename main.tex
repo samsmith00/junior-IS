@@ -114,13 +114,18 @@ where every value outside of the window's domain is reduced to zero \cite{royer2
 \end{figure}
 
 As depicted  by Figure~\ref{fig:non-windowed-and-windowed}, after applying the window function to the example signal, the edges of the signal
-tend toward zero. This functionality of the window function is crucial for making the phase vocoder operate correctly. When computing the DFT of an input 
-signal, it assumes that the signal is periodic. 
+tend toward zero. This byproduct of the window function is crucial for the phase vocoder. Without windowing, the signal may be discontinuous at its edges, 
+meaning the beginning and end do not line up. These discontinuities cause spectral leakage in the frequency domain.
+This leakage manifests itself as sidelobes and causes the calculated frequency of the signal to be less accurate \cite{reiss2014audioeffects}.
 
+\begin{itemize}
+  \item ADD VISUAL OF SIDELOBES AND SPECTRAL LEAKAGE IN FREQ. DOMAIN
+\end{itemize}
 
-In this example, the Hann window function was used to shape the signal, however, there are multiple windowing functions
-such as the Rectangle window function, Triangle window function and Hamming window function \cite{mcfee_dstbook}. For this project, the Hanning
-window will be employed as it yields a more smooth, continuous signal during the resynthesis step \cite{degotzen2000traditional}.
+In Figure~\ref{fig:non-windowed-and-windowed}, the Hann window function was used to shape the signal, however, there are multiple windowing functions
+such as the Rectangle window function, Triangle window function and Hamming window function \cite{mcfee_dstbook}. For this project, the Hanning window will be employed, 
+as it produces a smoother and more continuous signal during the resynthesis step \cite{degotzen2000traditional}.
+
 \begin{itemize}
   \item Further explain how windowing prevents spectral leakage and why we need it (prevents artifacts, fft assumes signal is periodic, does not work if not continuous at edges)
 \end{itemize}
