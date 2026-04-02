@@ -123,7 +123,7 @@ This leakage manifests itself as sidelobes and causes the calculated frequency o
 \begin{figure}[H] 
 \begin{center}
   \includegraphics[width=8cm]{imgs/pureWave.png}
-  \includegraphics[width=8cm]{imgs/pureFreq.png} \\
+  \includegraphics[width=8cm]{imgs/pureFreq.png} 
   \includegraphics[width=8cm]{imgs/discontinuousWave.png}
   \includegraphics[width=8cm]{imgs/leakageFreq.png}
 \caption{Illustration of spectral leakage. The top row shows a continuous signal segment that begins and ends at the same value, resulting in an accurate frequency representation. The bottom row shows a discontinuous signal segment, where the endpoints do not align, leading to spectral leakage and a spread in the frequency-domain representation.} 
@@ -135,9 +135,22 @@ In Figure~\ref{fig:non-windowed-and-windowed}, the Hann window function was used
 such as the Rectangle window function, Triangle window function and Hamming window function \cite{mcfee_dstbook}. For this project, the Hanning window will be employed, 
 as it produces a smoother and more continuous signal during the resynthesis step \cite{degotzen2000traditional}. 
 
-% \begin{itemize}
-%   \item Further explain how windowing prevents spectral leakage and why we need it (prevents artifacts, fft assumes signal is periodic, does not work if not continuous at edges)
-% \end{itemize}
+\begin{figure}[H] 
+\begin{center}
+  \includegraphics[width=8cm]{imgs/bigWave.png} 
+  \includegraphics[width=8cm]{imgs/bigWaveWindow.png}
+  \includegraphics[width=8cm]{imgs/noWindowFreq.png} 
+  \includegraphics[width=8cm]{imgs/windowFreq.png}
+
+\caption{Illustration of the windowing effect. The top row shows the original (non-windowed) and windowed signals. The bottom row shows their corresponding frequency plots. Applying the window reduces spectral leakage, making the main frequency component more accurately represented.}
+\label{fig:windowing-effect}
+ \end{center}
+\end{figure}
+
+\begin{itemize}
+  \item Add labels to graphs (title axes)
+  \item Talk about graphs and the improvement windowing made
+\end{itemize}
 
 \subsection{Short-Time Fourier Transform}
 The Short-Time Fourier Transform (STFT) is a time-frequency representation used to compute the DFT of contiguous windowed segments of a signal. In practice, 
