@@ -130,14 +130,10 @@ This leakage manifests itself as sidelobes and causes the calculated frequency o
 \label{fig:spectral-leakage}
  \end{center}
 \end{figure}
-
-\begin{itemize}
-  \item Explain how they are the same plots, just that one is continuous and the other is not
-\end{itemize}
-
+In order to mitigate the negative consequences a discontinuous signal produces, a window function is used to force continuity at the signal's edges. 
 In Figure~\ref{fig:non-windowed-and-windowed}, the Hann window function was used to shape the signal, however, there are multiple windowing functions
 such as the Rectangle window function, Triangle window function and Hamming window function \cite{mcfee_dstbook}. For this project, the Hanning window will be employed, 
-as it produces a smoother and more continuous signal during the resynthesis step \cite{degotzen2000traditional}.
+as it produces a smoother and more continuous signal during the resynthesis step \cite{degotzen2000traditional}. 
 
 % \begin{itemize}
 %   \item Further explain how windowing prevents spectral leakage and why we need it (prevents artifacts, fft assumes signal is periodic, does not work if not continuous at edges)
