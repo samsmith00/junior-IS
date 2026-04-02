@@ -119,6 +119,18 @@ tend toward zero. This byproduct of the window function is crucial for the phase
 meaning the beginning and end do not line up. These discontinuities cause spectral leakage in the frequency domain.
 This leakage manifests itself as sidelobes and causes the calculated frequency of the signal to be less accurate \cite{reiss2014audioeffects}.
 
+
+\begin{figure}[H] 
+\begin{center}
+  \includegraphics[width=8cm]{imgs/pureWave.png}
+  \includegraphics[width=8cm]{imgs/pureFreq.png} \\
+  \includegraphics[width=8cm]{imgs/discontinuousWave.png}
+  \includegraphics[width=8cm]{imgs/leakageFreq.png}
+\caption{Illustration of spectral leakage. The top row shows a continuous signal segment that begins and ends at the same value, resulting in an accurate frequency representation. The bottom row shows a discontinuous signal segment, where the endpoints do not align, leading to spectral leakage and a spread in the frequency-domain representation.} 
+\label{fig:spectral-leakage}
+ \end{center}
+\end{figure}
+
 \begin{itemize}
   \item ADD VISUAL OF SIDELOBES AND SPECTRAL LEAKAGE IN FREQ. DOMAIN
 \end{itemize}
