@@ -286,6 +286,20 @@ mathematical expression below demonstrates the COLA property:
 \begin{align}
   \sum_{m=-\infty}^{\infty} w(n - mH) = 1, \quad \forall n \in \mathbb{Z}
 \end{align}
+and Figure~\ref{fig:cola-property} below 
+
+\begin{figure}[H] 
+\begin{center}
+  \includegraphics[width=8cm]{imgs/bigWave.png} 
+  \includegraphics[width=8cm]{imgs/bigWaveWindow.png}
+  \includegraphics[width=8cm]{imgs/noWindowFreq.png} 
+  \includegraphics[width=8cm]{imgs/windowFreq.png}
+
+\caption{Illustration of the windowing effect. The top row shows the original (non-windowed) and windowed signals. The bottom row shows their corresponding frequency plots. Applying the window reduces spectral leakage, making the main frequency component more accurately represented.}
+\label{fig:cola-property}
+ \end{center}
+\end{figure}
+
 This project employs the Hanning window function with a $75\%$ overlap. To prove it possesses the COLA property we can graph several Hanning window functions 
 with a $75\%$ overlap and their corresponding overlap value. Figure 2 shows that by graphing five Hanning window functions with a $75\%$ overlap satisfies the COLA property. Notice a $66.67$\% ($\frac{2}{3}$) overlap 
 does not work as the sum of the samples fluctuates.
