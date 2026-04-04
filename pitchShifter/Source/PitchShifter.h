@@ -73,6 +73,7 @@ namespace pitchShifter {
 
         // phase calculation variables
         std::array<float, fftSize> previousPhaseData;
+        std::array<float, fftSize> binFrequencies;
         int nyquistFrequency = fftSize / 2;
 
 
@@ -143,10 +144,23 @@ namespace pitchShifter {
         void pitchShift() {
             float* fftPtr = fftData.data();
 
-            for (int i = 0; i < nyquistFrequency; ++i) {
+            for (int i = 0; i < nyquistFrequency; i+=2) {
+                float phase  = atan2(fftPtr[i + 1], fftPtr[i]);
+
+                // calculate phase remainder for a given bin i
+                float phaseDiff = phase - previousPhaseData[i];
+                float expectedPhase = (2 * M_PI * i * hopSize) / fftSize;
+                float phaseRemainder = phaseDiff - expectedPhase;
+
+
 
             }
 
+
+        }
+
+
+        float wrappedPhaseWrap(float phase) {
 
         }
     };
