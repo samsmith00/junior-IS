@@ -71,6 +71,12 @@ namespace pitchShifter {
         std::array<float, fftSize * 2> fftData;      // pass data to and from FFT object
 
 
+        // phase calculation variables
+        std::array<float, fftSize> previousPhaseData;
+        int nyquistFrequency = fftSize / 2;
+
+
+
         // processes channel's samples
         // write input sample to input buffer
         // computes fft if hopCount reaches hopSize
@@ -136,6 +142,10 @@ namespace pitchShifter {
 
         void pitchShift() {
             float* fftPtr = fftData.data();
+
+            for (int i = 0; i < nyquistFrequency; ++i) {
+
+            }
 
 
         }
