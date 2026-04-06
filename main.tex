@@ -255,9 +255,6 @@ This is accomplished by multiplying the signal frame by the Hann window function
 the FFT is computed on the windowed signal chunk, converting it from the time domain to the frequency domain. To process the next frame, 
 the analysis window moves ahead by $H$ (hop size) number of samples.
 
-\begin{itemize}
-  \item ADD VISUAL OF ANALYSIS STEP
-\end{itemize}
 The output of the analysis step is a collection of $M$ frequency bins (see Section 2.3), where each bin contains a complex value representing
 the magnitude and phase information for a particular frequency \cite{reiss2014audioeffects}. At this point, the signal frame can be modified in the 
 frequency domain, such as altering the pitch.
@@ -267,8 +264,10 @@ frequency domain, such as altering the pitch.
 
 
 \subsection{Modification}
-In this section I will explain how the phase algorithm uses the phase information obtained from the DFT to perform a more accurate
-frequency transformation. Additionally, the phase information is used to better reconstruct the signal in the resynthesis step.
+% In this section I will explain how the phase vocoder is used the phase information obtained from the DFT to perform a more accurate
+% frequency transformation. Additionally, the phase information is used to better reconstruct the signal in the resynthesis step.
+In this section, I will explain how the phase vocoder is used to modify a given input audio signal. After the modification step, 
+the audio signal will have been successfully pitch shifted in the frequency domain. 
 
 \begin{itemize}
   \item stpes to perform pitch modifcation
@@ -286,25 +285,26 @@ mathematical expression below demonstrates the COLA property:
 \begin{align}
   \sum_{m=-\infty}^{\infty} w(n - mH) = 1, \quad \forall n \in \mathbb{Z}
 \end{align}
-and Figure~\ref{fig:cola-property} below graphically demonstrates the COLA Property. 
+and Figure~\ref{fig:cola-property} below graphically shows the COLA Property. 
 
 \begin{figure}[H] 
 \begin{center}
   \includegraphics[width=8cm]{imgs/colaProp50.png} 
   \includegraphics[width=8cm]{imgs/colaProp40.png}
-
-\caption{Illustration of the Constant Overlap-Add (COLA) property. The first graph demonstrates that a 50\% overlap satisfies the COLA property. The second graph uses a 60\% overlap, which does not satisfy the COLA property.}
+  %\includegraphics[width=8cm]{imgs/cola75.png}
+\caption{Illustration of the Constant Overlap-Add (COLA) property. The first graph demonstrates that a 50\% overlap satisfies the COLA property. The second graph uses a 60\% overlap which does not satisfy the COLA property.}
 \label{fig:cola-property}
  \end{center}
 \end{figure}
 
-This project employs the Hanning window function with a $75\%$ overlap. Eventhough this amount of 
-overlap does not perfectly possess the COLA Property as shown in Figure~\ref{fig:cola-property}, the tradeoffs
-gained by using the Hanning window with a $75\%$ overlap outwights the negatives. In particular, 
+This project employs the Hanning window function with a $75\%$ overlap. Even though this amount of 
+overlap does not perfectly possess the COLA Property, the benefit of using a Hanning window with a $75\%$ overlap outweighs the negatives. 
+As seen in section 4.3, the phase vocoder uses previous phase values to more accurately estimate a signal's frequency. Thus, by having a larger overlap, 
+the phase vocoder more frequently analyzes the input signal which results in more accurate phase calculations \cite{barry2008time}. 
 
-\begin{itemize}
-  \item Talk about why this hanning window size is used, good frequency resolution, no problem with reconstructsion etc.
-\end{itemize}
+% \begin{itemize}
+%   \item Talk about why this hanning window size is used, good frequency resolution, no problem with reconstructsion etc.
+% \end{itemize}
 
 
 % To prove it possesses the COLA property we can graph several Hanning window functions 
@@ -313,7 +313,7 @@ gained by using the Hanning window with a $75\%$ overlap outwights the negatives
 
 To reconstruct the output signal, the values from the inverse STFT are first added into an output buffer. This buffer serves as temporary storage; it is not the final synthesized audio signal. 
 The output buffer is necessary because, due to overlapping windows ensured by the COLA property, certain samples are calculated as the sum of multiple windows. Once the samples have been correctly added in the buffer,
-a write pointer is used to read them sequentially, producing the final output signal.
+a write pointer is used to sequentially read them to the output audio buffer. 
 
 % COLA is a technique that ensures the original input audio signal can be perfectly reconstructed 
 % after windowing it into frames \cite{smith2011sasp}. 

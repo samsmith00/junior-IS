@@ -152,7 +152,10 @@ namespace pitchShifter {
                 float expectedPhase = (2 * M_PI * i * hopSize) / fftSize;
                 float phaseRemainder = phaseDiff - expectedPhase;
 
+                // calculate fractional bin
+                float wrappedPhase = wrapPhase(phaseDiff);
 
+                float fractionalBin = ((wrappedPhase * fftSize) / 2 * M_PI * hopSize) + i;
 
             }
 
@@ -160,8 +163,13 @@ namespace pitchShifter {
         }
 
 
-        float wrappedPhaseWrap(float phase) {
-
+        float wrapPhase(float phase) {
+            if (phase >= 0) {
+                return fmodf(phase + M_PI, 2 * M_PI) - M_PI;
+            }
+            else {
+                return fmodf(phase - M_PI, -2 * M_PI) + M_PI;
+            }
         }
     };
 }
