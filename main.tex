@@ -269,6 +269,26 @@ frequency domain, such as altering the pitch.
 In this section, I will explain how the phase vocoder is used to modify a given input audio signal. After the modification step, 
 the audio signal will have been successfully pitch shifted in the frequency domain. 
 
+With the completion of the analysis step, the 
+audio signal has been transformed into the frequency domain. The signal is now represented as linearly spaced frequency bins that 
+range from 0 to $N/2 + 1$. Each bin $k$ is a complex number of the form $a + jb$ that represents a specific analysis frequency \cite{mcfee_dstbook}. 
+An analysis frequency can be thought of as sinusoid that completes an integer number of cycles over an $N$ sample window. Thus, each frequency bin $k$ 
+measures the contribution of a sinusoid at frequency $\frac{k}{N} * f_s$, where $f_s$ is the sampling rate \cite{mcfee_dstbook}. 
+
+One shortcoming of the FFT however, is that it is possible for signals frequencies to fall between frequency bins. For example, a typical sampling rate might be $44100$Hz, 
+and let our window size be $1024$ samples. To calculate the spacing between frequences we compute: 
+\begin{align}
+  \Delta f = \frac{f_s}{N} = \frac{44100}{1024} \approx 43 \text{Hz}
+\end{align} 
+
+\begin{itemize}
+  \item maybe add a visual here
+\end{itemize}
+
+
+% The first step in modifying the audio signal is to
+% use the phase information gained from the FFT to compute the instantaneous frequencies of the signal chunk. 
+
 \begin{itemize}
   \item stpes to perform pitch modifcation
   \item how phase helps with frequency resolution
