@@ -168,7 +168,7 @@ domain to the frequency domain. In this form, the signal's frequency components 
 
 Since the STFT only computes the DFT of a particular section of a given signal, it must be shifted in order to process another section of the signal. 
 The amount in which the STFT is shifted is known as the \textit{Hop Size}, denoted as $H$. The hop size is determined by how much the successive STFTs should overlap, 
-more on this in Section 4.3. Typical hop sizes include $75\%$, $50\%$, $33.3\%$, and $20\%$ overlap. \cite{degotzen2000traditional}  
+more on this in Section 4.3. Typical hop sizes include $75\%$, $50\%$, $33.3\%$, and $20\%$ overlap \cite{degotzen2000traditional}.  
 Lastly, just as the DFT has an inverse, so to does the STFT. However, instead of reconstructing the entire signal, the inverse STFT only reconstructs a particular
 chunk of a signal. This is especially useful in reconstructing a signal after modifying it in the frequency domain. 
 
@@ -280,6 +280,9 @@ and let our window size be $1024$ samples. To calculate the spacing between freq
 \begin{align}
   \Delta f = \frac{f_s}{N} = \frac{44100}{1024} \approx 43 \text{Hz}
 \end{align} 
+Therefore, at bin 0 the analysis frequency is 0Hz, at bin 1 its 43Hz at bin 2 its 86Hz and so on. If a signal's frequency falls 
+between one of these bins, its energy is distributed accross all other bins and the actual frequency becomes obscured \cite{lim2007phasevocoder}.
+The energy distribution manifests itself as spectral leakage and as seen in Section 2.2 a windowing function helps to reduce the leakage. 
 
 \begin{itemize}
   \item maybe add a visual here
