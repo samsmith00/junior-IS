@@ -284,6 +284,23 @@ Therefore, at bin 0 the analysis frequency is 0Hz, at bin 1 its 43Hz at bin 2 it
 between one of these bins, its energy is distributed accross all other bins and the actual frequency becomes obscured \cite{lim2007phasevocoder}.
 The energy distribution manifests itself as spectral leakage and as seen in Section 2.2 a windowing function helps to reduce the leakage. 
 
+
+To more accurately calculate the signals frequency, the phase vocoder employs the use of the signals phase information from computing the FFT.
+The core principle behind this computation is that frequency is the derivative of phase. Thus, by using a signal's phase from two different hops
+the exact frequency of the signal can be calculated. The equation below mathematically demonstrates the frequency of a signal $\omega$ written as a
+first order derivative in terms of phase $\phi$: 
+\begin{align}
+  \omega[n] = \frac{\phi[n] - \phi[n-H]}{H}.
+\end{align} 
+Rearranging Equation 5 to obtain the phase difference by itself yields:
+\begin{align}
+  \phi[n] - \phi[n-H] &= \omega[n] H \\
+  &= \frac{2\pi k H}{N}. 
+\end{align}
+Thus, the phase shift for a sinusoid with a frequency exactly matching a frequency bin over one hop size is given by Equation 7. 
+
+
+
 \begin{itemize}
   \item maybe add a visual here
 \end{itemize}
