@@ -292,14 +292,30 @@ first order derivative in terms of phase $\phi$:
 \begin{align}
   \omega[n] = \frac{\phi[n] - \phi[n-H]}{H}.
 \end{align} 
-Rearranging Equation 5 to obtain the phase difference by itself yields:
+Now, we can rearrage Equation 5 to isolate the phase difference:
 \begin{align}
-  \phi[n] - \phi[n-H] &= \omega[n] H \\
-  &= \frac{2\pi k H}{N}. 
+  \phi[n] - \phi[n-H] &= \omega[n] H = \frac{2\pi k H}{N}. 
 \end{align}
 Thus, the phase shift for a sinusoid with a frequency exactly matching a frequency bin over one hop size is given by Equation 7. 
-
-
+What we now have is a basis to compare the actual signal frequency to. To compute the adjustment factor, also referred to as the phase
+remainder $\phi_r$, we can subtract the ideal phase from the actual observed phase \cite{lim2007phasevocoder}: 
+\begin{align}
+  \phi_r[n] = (\phi[n] - \phi[n-H]) - \frac{2\pi k H}{N}.
+\end{align}
+In order to keep from getting negative frequenceis, we must wrap $\phi_r$ between $(-\pi, \pi]$ \cite{reiss2014audioeffects}. Once the phase is wrapped, 
+we can calculate the the deviation of the observed frequency from the bin frequency: 
+\begin{align}
+  \omega[n] - \omega_k &= \frac{\text{wrap}(\phi_r[n])}{H}, \text{and} \\
+  \omega[n] &= \frac{\text{wrap}(\phi_r[n])}{H} + \omega_k. 
+\end{align}
+We now have an equation that computes the exact frequency of the sinusoid. Due to operating in a real-time enviornment however, 
+it is more computationaly efficient to compute a fractionl FFT bin number, which represents the frequency in terms of where it would
+fall if the bins had infinite resolution. To compute the fractional FFT bin number, we only need to Equation 9 by a factor of $2\pi/N$
+since $\omega[n] = \frac{2\pi k}{N}$. Doing so yields: 
+\begin{align}
+  b[n] =  \frac{\text{wrap}(\phi_r[n])N}{2\pi H} + k
+\end{align}
+and we now have a method to more accurately compute the frequency of our signal.
 
 \begin{itemize}
   \item maybe add a visual here
@@ -311,7 +327,6 @@ Thus, the phase shift for a sinusoid with a frequency exactly matching a frequen
 
 \begin{itemize}
   \item stpes to perform pitch modifcation
-  \item how phase helps with frequency resolution
 \end{itemize}
 
 
