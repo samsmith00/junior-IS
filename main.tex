@@ -277,9 +277,9 @@ measures the contribution of a sinusoid at frequency $\frac{k}{N} * f_s$, where 
 
 One shortcoming of the FFT however, is that it is possible for signals frequencies to fall between frequency bins. For example, a typical sampling rate might be $44100$Hz, 
 and let our window size be $1024$ samples. To calculate the spacing between frequences we compute: 
-\begin{align}
+\begin{align*}
   \Delta f = \frac{f_s}{N} = \frac{44100}{1024} \approx 43 \text{Hz}
-\end{align} 
+\end{align*} 
 Therefore, at bin 0 the analysis frequency is 0Hz, at bin 1 its 43Hz at bin 2 its 86Hz and so on. If a signal's frequency falls 
 between one of these bins, its energy is distributed accross all other bins and the actual frequency becomes obscured \cite{lim2007phasevocoder}.
 The energy distribution manifests itself as spectral leakage and as seen in Section 2.2 a windowing function helps to reduce the leakage. 
@@ -318,6 +318,10 @@ since $\omega[n] = \frac{2\pi k}{N}$. Doing so yields:
 and we now have a method to more accurately compute the frequency of our signal.
 
 \subsubsection{Pitch Shifting and Synthesizing a Signal}
+Now that we have a more accurate estimation of the frequency of the audio signal, pitch shifting the signal 
+is as simple as scaling the frequency $b[n]$ by a pitch shift factor $R$. In doing so, we compute a new fractional
+bin $b_s[n]$ where $b_s[n] = Rb[n]$. Finally we calculate the new bin number $k' = \text{floor}(Rk + 0.5)$ 
+that will contain the shifted frequency. 
 
 \begin{itemize}
   \item maybe add a visual here
