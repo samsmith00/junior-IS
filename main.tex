@@ -20,9 +20,12 @@
 \maketitle
 
 \section{Introduction}
-The manipulation of pitch in digital signals is not achieved by simply 
-scaling frequencies, but through structured transformations in the time-frequency 
-domain that reshape signals in a variety of ways.
+% The manipulation of pitch in digital signals is not achieved by simply 
+% scaling frequencies, but through structured transformations in the time-frequency 
+% domain that reshape signals in a variety of ways.
+\begin{itemize}
+  \item Add some info on how technology is used in music production from proposal
+\end{itemize}
 
 \subsection{Pitch Shifting}
 Pitch shifting is a desirable signal processing effect for a variety of practical reasons. 
@@ -305,7 +308,7 @@ remainder $\phi_r$, we can subtract the ideal phase from the actual observed pha
 In order to keep from getting negative frequenceis, we must wrap $\phi_r$ between $(-\pi, \pi]$ \cite{reiss2014audioeffects}. Once the phase is wrapped, 
 we can calculate the the deviation of the observed frequency from the bin frequency: 
 \begin{align}
-  \omega[n] - \omega_k &= \frac{\text{wrap}(\phi_r[n])}{H}, \text{and} \\
+  \omega[n] - \omega_k &= \frac{\text{wrap}(\phi_r[n])}{H}, \text{ and} \\
   \omega[n] &= \frac{\text{wrap}(\phi_r[n])}{H} + \omega_k. 
 \end{align}
 We now have an equation that computes the exact frequency of the sinusoid. Due to operating in a real-time enviornment however, 
@@ -335,7 +338,7 @@ Next, we add the $\phi_{sr}$ to the phase of the shifted signal that perfectly f
 \begin{align}
  \frac{2\pi Hb_s[n] - 2\pi H k'}{N}  + \frac{2\pi k' H}{N} = \frac{2\pi b_s[n]}{N}
 \end{align}
-Recall that $b_s[n]$ is the fractional bin index, hence we now computed the phase of the actual frequency of the input signal frame. We 
+Recall that $b_s[n]$ is the fractional bin index, hence we have now computed the phase of the actual frequency of the input signal frame. We 
 can now add the previous hops phase to the result of Equation 11 to obtain: 
 \begin{align}
   \phi_s[n] = \text{wrap}(\phi_s[n-H] + \frac{2\pi b_s[n]}{N})
@@ -394,13 +397,16 @@ a write pointer is used to sequentially read them to the output audio buffer.
 \end{itemize}
 
 \section{Methodology}
-%Dijkstra's algorithm was chosen for single-source shortest path computation on graphs with non-negative edge weights, following the implementation presented in CLRS~\cite{clrsAlgorithms}.
-In this section, I will be explaining how the phase vocoder algorithm is implemented in the JUCE framework. This section will be comprised of how JUCE operates on audio signals
-the data structures needed to implement the phase vocoder algorithm, such as circular buffers, how the DFT is computed in JUCE 
+% %Dijkstra's algorithm was chosen for single-source shortest path computation on graphs with non-negative edge weights, following the implementation presented in CLRS~\cite{clrsAlgorithms}.
+% In this section, I will be explaining how the phase vocoder algorithm is implemented in the JUCE framework. This section will be comprised of how JUCE operates on audio signals
+% the data structures needed to implement the phase vocoder algorithm, such as circular buffers, how the DFT is computed in JUCE 
 
-\subsubsection*{Transition Sentences}
-Now that we have unveiled the innerworkings of the phase vocoder algorithm, we will see how it is implemented in the JUCE audio framework
-JUCE is an open-source cross platfrom C++ framework used to develop audio applications and plugins
+% \subsubsection*{Transition Sentences}
+% Now that we have unveiled the innerworkings of the phase vocoder algorithm, we will see how it is implemented in the JUCE audio framework
+% JUCE is an open-source cross platfrom C++ framework used to develop audio applications and plugins
+The JUCE framework is used to implement the pitch-shifting audio plugin. JUCE is an open-source framework that supports the development of cross-platform audio applications and plugins. 
+Its integrated build system allows projects to target multiple plugin formats, such as VST3, AU and more. JUCE projects are written in C++, making it well-suited for developing highly efficient, 
+real-time audio plugins. Additionally, JUCE provides a wide range of built-in libraries that support common audio processing tasks, as well as tools for creating graphical user interfaces (GUIs).
 
 \begin{itemize}
   \item I built a pitch shifting audio plugin
