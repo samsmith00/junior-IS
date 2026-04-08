@@ -284,8 +284,8 @@ Therefore, at bin 0 the analysis frequency is 0Hz, at bin 1 its 43Hz at bin 2 it
 between one of these bins, its energy is distributed accross all other bins and the actual frequency becomes obscured \cite{lim2007phasevocoder}.
 The energy distribution manifests itself as spectral leakage and as seen in Section 2.2 a windowing function helps to reduce the leakage. 
 
-\subsubsection{Calculating a More Accurate Frequency}
-To more accurately calculate the signals frequency, the phase vocoder employs the use of the signals phase information from computing the FFT.
+\subsubsection{Computing a More Accurate Frequency}
+To more accurately calculate a  signal frame's frequency, the phase vocoder employs the use of the frame's phase information from the FFT.
 The core principle behind this computation is that frequency is the derivative of phase. Thus, by using a signal's phase from two different hops
 the exact frequency of the signal can be calculated. The equation below mathematically demonstrates the frequency of a signal $\omega$ written as a
 first order derivative in terms of phase $\phi$: 
@@ -323,23 +323,29 @@ is as simple as scaling the frequency $b[n]$ by a pitch shift factor $R$. In doi
 bin $b_s[n]$ where $b_s[n] = Rb[n]$. Finally we calculate the new bin number $k' = \text{floor}(Rk + 0.5)$ 
 that will contain the shifted frequency. 
 
-\begin{itemize}
-  \item maybe add a visual here
-\end{itemize}
-
-
-% The first step in modifying the audio signal is to
-% use the phase information gained from the FFT to compute the instantaneous frequencies of the signal chunk. 
-
-\begin{itemize}
-  \item stpes to perform pitch modifcation
-\end{itemize}
-
+The final part of the modification step is to calculate a new phase value for the shifted frequency. The new phase 
+value ensures that the modified signal is reconstruced correctly and does not introduce any discontinuities at the signal
+frame's edges \cite{barry2008time}. The calcuation is similar to Equation 6 with a few adjustments. To compute the new phase
+value, we are only concerned with how much the phase has changed from one hop to the next, thus we first must compute the phase
+remainder of our new frequency: 
+\begin{align}
+  \phi_{rs}[n] = \frac{2\pi H(b_s[n] - k')}{N}.
+\end{align}
+Next, we add the $\phi_{sr}$ to the phase of the shifted signal that perfectly fits into a frequency bin to obtain: 
+\begin{align}
+ \frac{2\pi Hb_s[n] - 2\pi H k'}{N}  + \frac{2\pi k' H}{N} = \frac{2\pi b_s[n]}{N}
+\end{align}
+Recall that $b_s[n]$ is the fractional bin index, hence we now computed the phase of the actual frequency of the input signal frame. We 
+can now add the previous hops phase to the result of Equation 11 to obtain: 
+\begin{align}
+  \phi_s[n] = \text{wrap}(\phi_s[n-H] + \frac{2\pi b_s[n]}{N})
+\end{align}
+where $\phi_s[n]$ is the actual phase of this bin at the current hop.  
 
 
 \subsection{Synthesis}
 
-Once the signal frame has been modified, the IFFT converts the signal back to the time domain. Then the output is reconstructed using
+Once the signal frame has been modified and a new phase value hase been calculated, the IFFT converts the signal back to the time domain. Then the output is reconstructed using
 the Constant Overlap-Add (COLA) paradigm. A detailed explanation of COLA can be found here \cite{smith2011sasp}. The key idea is that 
 if samples in the window function, offset by $H$, add to a constant $C$, then the window possesses the "Constant Overlap-Add Property" \cite{smith2011sasp}. The 
 mathematical expression below demonstrates the COLA property: 
