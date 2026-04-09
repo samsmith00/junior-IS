@@ -341,7 +341,7 @@ Next, we add the $\phi_{sr}$ to the phase of the shifted signal that perfectly f
 Recall that $b_s[n]$ is the fractional bin index, hence we have now computed the phase of the actual frequency of the input signal frame. We 
 can now add the previous hops phase to the result of Equation 11 to obtain: 
 \begin{align}
-  \phi_s[n] = \text{wrap}(\phi_s[n-H] + \frac{2\pi b_s[n]}{N})
+  \phi_s[n] = \text{wrap}\left(\phi_s[n-H] + \frac{2\pi b_s[n]}{N}\right)
 \end{align}
 where $\phi_s[n]$ is the actual phase of this bin at the current hop.  
 
@@ -385,19 +385,9 @@ To reconstruct the output signal, the values from the inverse STFT are first add
 The output buffer is necessary because, due to overlapping windows ensured by the COLA property, certain samples are calculated as the sum of multiple windows. Once the samples have been correctly added in the buffer,
 a write pointer is used to sequentially read them to the output audio buffer. 
 
-% COLA is a technique that ensures the original input audio signal can be perfectly reconstructed 
-% after windowing it into frames \cite{smith2011sasp}. 
 
-% This section will explain how the phase vocoder algorithm reconstructs the modified signal. It involves reapplying our windowing function and 
-% compleating COLA (Constant Overlap-Add)
-\begin{itemize}
-  \item After performing the frequency transformation step, we take the inverse DFT of the signal to convert it back into the time-domain
-  \item We also apply the windowing function again to ensure that when we recombine the signal the edges of contiguous blocks line up
-  \item I will explain why then we need to multiply our discrete signal values by a windowing Correctin value
-\end{itemize}
 
 \section{Methodology}
-% %Dijkstra's algorithm was chosen for single-source shortest path computation on graphs with non-negative edge weights, following the implementation presented in CLRS~\cite{clrsAlgorithms}.
 % In this section, I will be explaining how the phase vocoder algorithm is implemented in the JUCE framework. This section will be comprised of how JUCE operates on audio signals
 % the data structures needed to implement the phase vocoder algorithm, such as circular buffers, how the DFT is computed in JUCE 
 
@@ -408,14 +398,23 @@ The JUCE framework is used to implement the pitch-shifting audio plugin. JUCE is
 Its integrated build system allows projects to target multiple plugin formats, such as VST3, AU and more. JUCE projects are written in C++, making it well-suited for developing highly efficient, 
 real-time audio plugins. Additionally, JUCE provides a wide range of built-in libraries that support common audio processing tasks, as well as tools for creating graphical user interfaces (GUIs).
 
-\begin{itemize}
-  \item I built a pitch shifting audio plugin
-  \item My goals were to build a real-time, polyphonic pitch shifting plugin that could pitch shift up to 5 semitones (downtune and uptune)
-  \item I implemented this audio plugin in the JUCE framework, an open source framework used to develop audio applications and plugins
-  \item The main plugin methods we are concerned with are PluginProcessor.PrepareToPlay(), PluginProcessor.releaseResources(), and pluginProcessor.processBlock()
-  \item The main functionality of JUCE we are concerned with is the AudioBuffer. This is an array of discrete signal values that get's passed to the plugin class
-  \item I will also explain circular buffers, as this is the main data structure that the phase vocoder employs. It is used in two places, the inputBuffer and outputBuffer
-\end{itemize}
+The core components of JUCE we are most concerned with are the methods that handle an audio plugin's initialization, process and audio buffer's signal samples, and release the plugin's resources on termination. 
+These built-in class methods provided by JUCE provide a basis for further development and require the developer to expand on them in order to support their plugin's needs.  
+The method that is used to handle an audio plugin's initialization is the PluginProcessor.PrepareToPlay() function. This callback method is invoked before the plugin starts to process audio \cite{juce}. 
+The purpose of this method is to prepare the plugin for handling audio buffers and initialize any resources the plugin might need. 
+Once an audio plugin has been initialized, the plugin will start to receive signal data, typically from a digital audio workstation (DAW). Processing an entire signal in a 
+real-time environment is not possible, thus the plugin employs block based processing where it only receives a particular block (chunk) of a signal at a time. These blocks are referred to as audio buffers and they contain the input signal's samples. 
+The audio samples are passed to the plugin's processBlock() method which is where the plugin performs any modification of the signal. Once the plugin has finished modifying the current audio buffer, 
+JUCE passes the buffer back to the DAW where it can then be either thrasmited to speakers or be further processed by additional audio pugins.  
+
+% \begin{itemize}
+%   \item I built a pitch shifting audio plugin
+%   \item My goals were to build a real-time, polyphonic pitch shifting plugin that could pitch shift up to 5 semitones (downtune and uptune)
+%   \item I implemented this audio plugin in the JUCE framework, an open source framework used to develop audio applications and plugins
+%   \item The main plugin methods we are concerned with are PluginProcessor.PrepareToPlay(), PluginProcessor.releaseResources(), and pluginProcessor.processBlock()
+%   \item The main functionality of JUCE we are concerned with is the AudioBuffer. This is an array of discrete signal values that get's passed to the plugin class
+%   \item I will also explain circular buffers, as this is the main data structure that the phase vocoder employs. It is used in two places, the inputBuffer and outputBuffer
+% \end{itemize}
 
 \section{Results}
 %An exemplary figure is shown in Figure~\ref{fig:dijkstra}. Any time a figure is used, it must have a capation and be directly referred to and discussed in the text.
