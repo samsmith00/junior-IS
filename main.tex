@@ -23,9 +23,27 @@
 % The manipulation of pitch in digital signals is not achieved by simply 
 % scaling frequencies, but through structured transformations in the time-frequency 
 % domain that reshape signals in a variety of ways.
-\begin{itemize}
-  \item Add some info on how technology is used in music production from proposal
-\end{itemize}
+The VST (Visual Studio Technology) and AU (Audio Units) plugin ecosystem greatly contributes to the music industry today.
+With the rise of digital audio workstations (DAWs) in the early 2000s, technology has become an integral part of music production and composition \cite{rana2024influence}.
+In particular, the electric guitar has long been associated with technological advancements in the industry.
+Engineers first harnessed the power of vacuum tubes to create the earliest electric guitar amplifiers, and later transitioned to transistor-based designs.
+
+
+Today, traditional amps and effect pedals have been overtaken by virtual amplifiers and software-based effects plugins. Once-dominant traditional hardware companies
+are now competing with highly technical and lucrative software companies that specialize in music production software \cite{rana2024influence}. The purpose of this project
+is to design and implement a high-demand audio plugin for modern music production software. 
+
+The plugin in question is a pitch shifter, a widely used effect that digitally modifies an input signal in real time. 
+Its core functionality is to increase or decrease the input signal’s pitch by algorithmically altering every
+frequency component in a signal \cite{rai2019analysis}. More importantly, it allows for a guitar player to quickly change the 
+tuning of their guitar. This solves the common problem of a guitar player wanting to play a particular song in a certin tuning 
+but their guitar does not support said tuning. Thus, the pitch shifter solves this problem by digitally modifying the guitar signal 
+to the desired tuning before it reaches the amplifier. This is especially useful for guitarists who want to detune their guitar (tune the guitar to a lower pitch). 
+Before detuning a guitar, one must consider a number of physical factors, such as the strings’ gauge (thickness), 
+the width of the nut, and the length and tension of the neck. If even one of these factors does not support a major detuning, 
+the guitar cannot be safely or effectively retuned. A pitch shifter removes these physical limitations by solving the tuning problem 
+through a purely software-based approach.
+
 
 \subsection{Pitch Shifting}
 Pitch shifting is a desirable signal processing effect for a variety of practical reasons. 
