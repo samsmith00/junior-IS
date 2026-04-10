@@ -34,12 +34,12 @@ are now competing with highly technical and lucrative software companies that sp
 is to design and implement a high-demand audio plugin for modern music production software. 
 
 The plugin in question is a pitch shifter, a widely used effect that digitally modifies an input signal in real time. 
-Its core functionality is to increase or decrease the input signal’s pitch by algorithmically altering every
+Its core functionality is to increase or decrease the input signal's pitch by algorithmically altering every
 frequency component in a signal \cite{rai2019analysis}. More importantly, it allows for a guitar player to quickly change the 
 tuning of their guitar. This solves the common problem of a guitar player wanting to play a particular song in a certin tuning 
 but their guitar does not support said tuning. Thus, the pitch shifter solves this problem by digitally modifying the guitar signal 
 to the desired tuning before it reaches the amplifier. This is especially useful for guitarists who want to detune their guitar (tune the guitar to a lower pitch). 
-Before detuning a guitar, one must consider a number of physical factors, such as the strings’ gauge (thickness), 
+Before detuning a guitar, one must consider a number of physical factors, such as the strings' gauge (thickness), 
 the width of the nut, and the length and tension of the neck. If even one of these factors does not support a major detuning, 
 the guitar cannot be safely or effectively retuned. A pitch shifter removes these physical limitations by solving the tuning problem 
 through a purely software-based approach.
@@ -152,21 +152,26 @@ This leakage manifests itself as sidelobes and causes the calculated frequency o
  \end{center}
 \end{figure}
 In order to mitigate the negative consequences a discontinuous signal produces, a window function is used to force continuity at the signal's edges. 
-In Figure~\ref{fig:non-windowed-and-windowed}, the Hann window function was used to shape the signal, however, there are multiple windowing functions
+In Figure~\ref{fig:non-windowed-and-windowed}, the Hanning window function was used to shape the signal, however, there are multiple windowing functions
 such as the Rectangle window function, Triangle window function and Hamming window function \cite{mcfee_dstbook}. For this project, the Hanning window will be employed, 
 as it produces a smoother and more continuous signal during the resynthesis step \cite{degotzen2000traditional}. 
 
 \begin{figure}[H] 
 \begin{center}
-  \includegraphics[width=8cm]{imgs/bigWave.png} 
-  \includegraphics[width=8cm]{imgs/bigWaveWindow.png}
-  \includegraphics[width=8cm]{imgs/noWindowFreq.png} 
-  \includegraphics[width=8cm]{imgs/windowFreq.png}
+  \includegraphics[width=8cm]{imgs/rectWindow.png} 
+  \includegraphics[width=8cm]{imgs/hannWindow.png}
+  \includegraphics[width=8cm]{imgs/rectWindowFFT.png} 
+  \includegraphics[width=8cm]{imgs/hannWindowFFT.png}
 
-\caption{Illustration of the windowing effect. The top row shows the original (non-windowed) and windowed signals. The bottom row shows their corresponding frequency plots. Applying the window reduces spectral leakage, making the main frequency component more accurately represented.}
+\caption{Illustration of the windowing effect. The top row shows the rectangle windowed and Hanning windowed signals. The bottom row shows their corresponding frequency plots. Applying the Hanning window reduces spectral leakage, making the main frequency component more accurately represented.}
 \label{fig:windowing-effect}
  \end{center}
 \end{figure}
+Notice that the Hanning frequency plot tapers off much more rapidly than the rectangle frequency plot. The regions of a frequency spectrum 
+outside of the main peeks are referred to as side lobes. If the side lobes are too prominant in the windowed function, 
+subsequent frequency estimations will be less accruate. 
+
+
 
 \begin{itemize}
   \item Add labels to graphs (title axes)
@@ -272,7 +277,7 @@ of the signal, it only needs to process the signal locally.
 
 
 In practice, the STFT is used to partition the audio signal into frames of length $N$.
-This is accomplished by multiplying the signal frame by the Hann window function. Once the signal frame has been isolated, 
+This is accomplished by multiplying the signal frame by the Hanning window function. Once the signal frame has been isolated, 
 the FFT is computed on the windowed signal chunk, converting it from the time domain to the frequency domain. To process the next frame, 
 the analysis window moves ahead by $H$ (hop size) number of samples.
 
@@ -352,7 +357,7 @@ remainder of our new frequency:
 \begin{align}
   \phi_{rs}[n] = \frac{2\pi H(b_s[n] - k')}{N}.
 \end{align}
-Next, we add the $\phi_{sr}$ to the phase of the shifted signal that perfectly fits into a frequency bin to obtain: 
+Next, we add the $\phi_{rs}$ to the phase of the shifted signal that perfectly fits into a frequency bin to obtain: 
 \begin{align}
  \frac{2\pi Hb_s[n] - 2\pi H k'}{N}  + \frac{2\pi k' H}{N} = \frac{2\pi b_s[n]}{N}
 \end{align}
@@ -420,7 +425,7 @@ The core components of JUCE we are most concerned with are the methods that hand
 These built-in class methods provided by JUCE provide a basis for further development and require the developer to expand on them in order to support their plugin's needs.  
 The method that is used to handle an audio plugin's initialization is the PluginProcessor.PrepareToPlay() function. This callback method is invoked before the plugin starts to process audio \cite{juce}. 
 The purpose of this method is to prepare the plugin for handling audio buffers and initialize any resources the plugin might need. 
-Once an audio plugin has been initialized, the plugin will start to receive signal data, typically from a digital audio workstation (DAW). Processing an entire signal in a 
+Once an audio plugin has been initialized, the plugin will start to receive signal data, typically from a DAW. Processing an entire signal in a 
 real-time environment is not possible, thus the plugin employs block based processing where it only receives a particular block (chunk) of a signal at a time. These blocks are referred to as audio buffers and they contain the input signal's samples. 
 The audio samples are passed to the plugin's processBlock() method which is where the plugin performs any modification of the signal. Once the plugin has finished modifying the current audio buffer, 
 JUCE passes the buffer back to the DAW where it can then be either thrasmited to speakers or be further processed by additional audio pugins.  
