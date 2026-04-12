@@ -21,10 +21,13 @@ namespace pitchShifter {
         {
         }
 
-        int getLatencyInSamples() const;
+        static int getLatencyInSamples() {
+            return fftSize;
+        }
 
         void prepare(double sampleRate, int expectedMaxFramesPerBlock) {
-            juce::ignoreUnused (sampleRate, expectedMaxFramesPerBlock);
+            juce::ignoreUnused (expectedMaxFramesPerBlock);
+            psSampleRate = sampleRate;
             reset();
         }
 
@@ -40,8 +43,10 @@ namespace pitchShifter {
             inputHopCount = 0;
             outputWritePtr = hopSize;
             outputReadPtr = 0;
+
             std::fill(inputBuffer.begin(), inputBuffer.end(), 0.0f);
             std::fill(outputBuffer.begin(), outputBuffer.end(), 0.0f);
+            std::fill(previousPhaseData.begin(), previousPhaseData.end(), 0.0f);
         }
 
         private:
@@ -50,6 +55,7 @@ namespace pitchShifter {
         static constexpr int fftSize = 1 << fftOrder;      // 1024 samples
         static constexpr int overlap = 4;                  // 75% overlap
         static constexpr int hopSize = fftSize / overlap;  // 256 samples
+        double psSampleRate;
 
         // create fft and window objects
         juce::dsp::FFT fft;
@@ -144,32 +150,35 @@ namespace pitchShifter {
         void pitchShift() {
             float* fftPtr = fftData.data();
 
-            for (int i = 0; i < nyquistFrequency; i+=2) {
+            for (int k = 0; k < nyquistFrequency; ++k) {
+                int i = k * 2;
                 float phase  = atan2(fftPtr[i + 1], fftPtr[i]);
 
                 // calculate phase remainder for a given bin i
-                float phaseDiff = phase - previousPhaseData[i];
-                float expectedPhase = (2 * M_PI * i * hopSize) / fftSize;
+                float phaseDiff = phase - previousPhaseData[k];
+                float expectedPhase = (2 * M_PI * k * hopSize) / fftSize;
                 float phaseRemainder = phaseDiff - expectedPhase;
 
                 // calculate fractional bin
-                float wrappedPhase = wrapPhase(phaseDiff);
+                float wrappedPhase = wraphPhase(phaseRemainder);
+                float fractionalBin = ((wrappedPhase * fftSize) / (2 * M_PI * hopSize)) + k;
 
-                float fractionalBin = ((wrappedPhase * fftSize) / 2 * M_PI * hopSize) + i;
+                // convert fractional bin to frequency
+                float actualFrequency = (fractionalBin * psSampleRate) / fftSize;
 
+                // Shifting and Synthesizing the Signal
             }
 
 
         }
-
-
-        float wrapPhase(float phase) {
+        float wraphPhase(float phase) {
             if (phase >= 0) {
                 return fmodf(phase + M_PI, 2 * M_PI) - M_PI;
             }
             else {
-                return fmodf(phase - M_PI, -2 * M_PI) + M_PI;
+                return fmodf(phase - M_PI, 2 * M_PI) + M_PI;
             }
+
         }
     };
 }

@@ -172,12 +172,6 @@ outside of the main peeks are referred to as side lobes. If the side lobes are t
 subsequent frequency estimations will be less accruate. 
 
 
-
-\begin{itemize}
-  \item Add labels to graphs (title axes)
-  \item Talk about graphs and the improvement windowing made
-\end{itemize}
-
 \subsection{Short-Time Fourier Transform}
 The Short-Time Fourier Transform (STFT) is a time-frequency representation used to compute the DFT of contiguous windowed segments of a signal. In practice, 
 however, the STFT uses the FFT as this is more computationally efficient.
@@ -323,7 +317,7 @@ Now, we can rearrage Equation 5 to isolate the phase difference:
   \phi[n] - \phi[n-H] &= \omega[n] H = \frac{2\pi k H}{N}. 
 \end{align}
 Thus, the phase shift for a sinusoid with a frequency exactly matching a frequency bin over one hop size is given by Equation 7. 
-What we now have is a basis to compare the actual signal frequency to. To compute the adjustment factor, also referred to as the phase
+What we now have is a basis to compare the actual signal frequency to. Computing the adjustment factor, also referred to as the phase
 remainder $\phi_r$, we can subtract the ideal phase from the actual observed phase \cite{lim2007phasevocoder}: 
 \begin{align}
   \phi_r[n] = (\phi[n] - \phi[n-H]) - \frac{2\pi k H}{N}.
