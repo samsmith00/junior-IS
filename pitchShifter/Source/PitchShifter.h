@@ -83,7 +83,7 @@ namespace pitchShifter {
 
 
         // phase calculation variables
-        int nyquistFrequency = fftSize / 2 + 1;
+        //int nyquistFrequency = fftSize / 2;
 
         std::array<float, fftSize> previousPhaseData;
         std::array<float, fftSize> previousSynthesizedPhaseData;
@@ -91,12 +91,6 @@ namespace pitchShifter {
         std::array<float, fftSize/2+1> analysisFrequencies;
         std::array<float, fftSize/2+1> synthesisMagnitudes;
         std::array<float, fftSize/2+1> synthesisFrequencies;
-
-
-        //std::array<float, fftSize> binFrequencies;
-
-
-
 
         // processes channel's samples
         // write input sample to input buffer
@@ -164,7 +158,8 @@ namespace pitchShifter {
         void pitchShift() {
             float* fftPtr = fftData.data();
 
-            for (int k = 0; k < nyquistFrequency; ++k) {
+            // Frequency Estimation
+            for (int k = 0; k < fftSize/2; ++k) {
                 int i = k * 2;
 
                 float magnitude = std::sqrt(std::powf(fftPtr[i], 2) + std::powf(fftPtr[i + 1], 2));
@@ -177,16 +172,11 @@ namespace pitchShifter {
                 float phaseRemainder = wraphPhase(phaseDiff - expectedCenterFreq);
 
                 // calculate fractional bin
-                //float wrappedPhaseRemainder = wraphPhase(phaseRemainder);
-                float fractionalBin = ((phaseRemainder * fftSize) / (2 * M_PI * hopSize)) + k;
-
-                // convert fractional bin to frequency
-                //float actualFrequency = (fractionalBin * psSampleRate) / fftSize;
+                float fractionalBin = ((phaseRemainder * fftSize) / (2 * M_PI * hopSize)) + (float)k;
 
                 analysisMagnitudes[k] = magnitude;
                 analysisFrequencies[k] = fractionalBin;
 
-                // save phase for next hop calculation
                 previousPhaseData[k] = phase;
             }
 
@@ -194,15 +184,17 @@ namespace pitchShifter {
             std::ranges::fill(synthesisMagnitudes, 0);
             std::ranges::fill(synthesisFrequencies, 0);
 
-            float pitchFactor = 2.0;
+            float pitchFactor = 2.0; // hard code pitch shifter
 
-            for (int k = 0; k < nyquistFrequency; ++k) {
-                float shiftedFrequency = analysisFrequencies[k] * pitchFactor;
+            for (int k = 0; k < fftSize/2; ++k) {
+                // nearest bin to shifted frequency
                 int newBin = floorf(k * pitchFactor + 0.5);
 
-                if (newBin <= nyquistFrequency) {
+                float shiftedFrequency = analysisFrequencies[k] * pitchFactor;
+
+                if (newBin <= fftSize/2) {
                     synthesisMagnitudes[newBin] += analysisMagnitudes[k];
-                    synthesisFrequencies[newBin] += shiftedFrequency; // CHECK BACK AT THIS
+                    synthesisFrequencies[newBin] = shiftedFrequency;
                 }
             }
 
@@ -218,9 +210,25 @@ namespace pitchShifter {
 
                 float actualPhase = phaseDiff + idealPhase;
 
+                float newPhase = wraphPhase(previousSynthesizedPhaseData[k] + actualPhase);
 
+                float real = magnitude * cosf(newPhase);
+                float imag = magnitude * sinf(newPhase);
 
+                int i = k * 2;
+                fftPtr[i] = real;
+                fftPtr[i + 1] = imag;
+
+                if (k > 0 && k < fftSize/2) {
+                    int conjugate = (k + fftSize/2) * 2;
+                    fftPtr[conjugate] = fftPtr[k];
+                    fftPtr[conjugate + 1] = -fftPtr[k+1];
+                }
+
+                previousSynthesizedPhaseData[k] = newPhase;
+            }
         }
+
         float wraphPhase(float phase) {
             if (phase >= 0) {
                 return fmodf(phase + M_PI, 2 * M_PI) - M_PI;
@@ -230,5 +238,6 @@ namespace pitchShifter {
             }
 
         }
+
     };
 }

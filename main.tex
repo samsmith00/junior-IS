@@ -330,7 +330,7 @@ we can calculate the the deviation of the observed frequency from the bin freque
 \end{align}
 We now have an equation that computes the exact frequency of the sinusoid. Due to operating in a real-time enviornment however, 
 it is more computationaly efficient to compute a fractionl FFT bin number, which represents the frequency in terms of where it would
-fall if the bins had infinite resolution. To compute the fractional FFT bin number, we only need to Equation 9 by a factor of $2\pi/N$
+fall if the bins had infinite resolution. To compute the fractional FFT bin number, we only need to scale Equation 9 by a factor of $2\pi/N$
 since $\omega[n] = \frac{2\pi k}{N}$. Doing so yields: 
 \begin{align}
   b[n] =  \frac{\text{wrap}(\phi_r[n])N}{2\pi H} + k
