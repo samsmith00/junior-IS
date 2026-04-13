@@ -353,12 +353,12 @@ remainder of our new frequency:
 \end{align}
 Next, we add the $\phi_{rs}$ to the phase of the shifted signal that perfectly fits into a frequency bin to obtain: 
 \begin{align}
- \frac{2\pi Hb_s[n] - 2\pi H k'}{N}  + \frac{2\pi k' H}{N} = \frac{2\pi b_s[n]}{N}
+ \frac{2\pi Hb_s[n] - 2\pi H k'}{N}  + \frac{2\pi k' H}{N} = \frac{2\pi H b_s[n]}{N}.
 \end{align}
 Recall that $b_s[n]$ is the fractional bin index, hence we have now computed the phase of the actual frequency of the input signal frame. We 
 can now add the previous hops phase to the result of Equation 11 to obtain: 
 \begin{align}
-  \phi_s[n] = \text{wrap}\left(\phi_s[n-H] + \frac{2\pi b_s[n]}{N}\right)
+  \phi_s[n] = \text{wrap}\left(\phi_s[n-H] + \frac{2\pi H b_s[n]}{N}\right)
 \end{align}
 where $\phi_s[n]$ is the actual phase of this bin at the current hop.  
 

@@ -47,6 +47,7 @@ namespace pitchShifter {
             std::fill(inputBuffer.begin(), inputBuffer.end(), 0.0f);
             std::fill(outputBuffer.begin(), outputBuffer.end(), 0.0f);
             std::fill(previousPhaseData.begin(), previousPhaseData.end(), 0.0f);
+            std::fill(previousSynthesizedPhaseData.begin(), previousSynthesizedPhaseData.end(), 0.0f);
         }
 
         private:
@@ -79,6 +80,8 @@ namespace pitchShifter {
 
         // phase calculation variables
         std::array<float, fftSize> previousPhaseData;
+        std::array<float, fftSize> previousSynthesizedPhaseData;
+
         std::array<float, fftSize> binFrequencies;
         int nyquistFrequency = fftSize / 2;
 
@@ -152,22 +155,28 @@ namespace pitchShifter {
 
             for (int k = 0; k < nyquistFrequency; ++k) {
                 int i = k * 2;
-                float phase  = atan2(fftPtr[i + 1], fftPtr[i]);
+
+                float magnitude = std::sqrt(std::powf(fftPtr[i], 2) + std::powf(fftPtr[i + 1], 2));
+                float phase = atan2(fftPtr[i + 1], fftPtr[i]);
 
                 // calculate phase remainder for a given bin i
                 float phaseDiff = phase - previousPhaseData[k];
-                float expectedPhase = (2 * M_PI * k * hopSize) / fftSize;
-                float phaseRemainder = phaseDiff - expectedPhase;
+
+                float expectedCenterFreq = (2 * M_PI * k * hopSize) / fftSize;
+                float phaseRemainder = wraphPhase(phaseDiff - expectedCenterFreq);
 
                 // calculate fractional bin
-                float wrappedPhase = wraphPhase(phaseRemainder);
-                float fractionalBin = ((wrappedPhase * fftSize) / (2 * M_PI * hopSize)) + k;
+                //float wrappedPhaseRemainder = wraphPhase(phaseRemainder);
+                float fractionalBin = ((phaseRemainder * fftSize) / (2 * M_PI * hopSize)) + k;
 
                 // convert fractional bin to frequency
-                float actualFrequency = (fractionalBin * psSampleRate) / fftSize;
+                //float actualFrequency = (fractionalBin * psSampleRate) / fftSize;
 
-                // Shifting and Synthesizing the Signal
+                // save phase for next hop calculation
+                previousPhaseData[k] = phase;
             }
+
+            for
 
 
         }
