@@ -206,6 +206,17 @@ namespace pitchShifter {
                 }
             }
 
+            // synthesis (phase -> frequency)
+            for (int k = 0; k < fftSize/2; ++k) {
+                float magnitude = synthesisMagnitudes[k];
+
+                float binDeviation = synthesisFrequencies[k] - k;
+
+                float phaseDiff = (2 * M_PI * hopSize * binDeviation) / fftSize;
+
+                float idealPhase = (2 * M_PI * k * hopSize) / fftSize;
+
+                float actualPhase = phaseDiff + idealPhase;
 
 
 
