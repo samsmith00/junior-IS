@@ -191,8 +191,8 @@ namespace pitchShifter {
             }
 
             // pitch shifting
-            std::fill(synthesisMagnitudes.begin(), synthesisMagnitudes.end(), 0);
-            std::fill(synthesisFrequencies.begin(), synthesisFrequencies.end(), 0);
+            std::ranges::fill(synthesisMagnitudes, 0);
+            std::ranges::fill(synthesisFrequencies, 0);
 
             float pitchFactor = 2.0;
 
