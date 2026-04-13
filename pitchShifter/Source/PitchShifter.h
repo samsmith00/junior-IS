@@ -9,7 +9,7 @@
 #include <juce_dsp/juce_dsp.h>
 #include <ranges>
 #include <iostream>
-
+#include <launch.h>
 
 
 namespace pitchShifter {
@@ -48,6 +48,10 @@ namespace pitchShifter {
             std::fill(outputBuffer.begin(), outputBuffer.end(), 0.0f);
             std::fill(previousPhaseData.begin(), previousPhaseData.end(), 0.0f);
             std::fill(previousSynthesizedPhaseData.begin(), previousSynthesizedPhaseData.end(), 0.0f);
+            std::fill(analysisMagnitudes.begin(), analysisMagnitudes.end(), 0.0f);
+            std::fill(analysisFrequencies.begin(), analysisFrequencies.end(), 0.0f);
+            std::fill(synthesisMagnitudes.begin(), synthesisMagnitudes.end(), 0.0f);
+            std::fill(synthesisFrequencies.begin(), synthesisFrequencies.end(), 0.0f);
         }
 
         private:
@@ -79,11 +83,18 @@ namespace pitchShifter {
 
 
         // phase calculation variables
+        int nyquistFrequency = fftSize / 2 + 1;
+
         std::array<float, fftSize> previousPhaseData;
         std::array<float, fftSize> previousSynthesizedPhaseData;
+        std::array<float, fftSize/2+1> analysisMagnitudes;
+        std::array<float, fftSize/2+1> analysisFrequencies;
+        std::array<float, fftSize/2+1> synthesisMagnitudes;
+        std::array<float, fftSize/2+1> synthesisFrequencies;
 
-        std::array<float, fftSize> binFrequencies;
-        int nyquistFrequency = fftSize / 2;
+
+        //std::array<float, fftSize> binFrequencies;
+
 
 
 
@@ -172,11 +183,30 @@ namespace pitchShifter {
                 // convert fractional bin to frequency
                 //float actualFrequency = (fractionalBin * psSampleRate) / fftSize;
 
+                analysisMagnitudes[k] = magnitude;
+                analysisFrequencies[k] = fractionalBin;
+
                 // save phase for next hop calculation
                 previousPhaseData[k] = phase;
             }
 
-            for
+            // pitch shifting
+            std::fill(synthesisMagnitudes.begin(), synthesisMagnitudes.end(), 0);
+            std::fill(synthesisFrequencies.begin(), synthesisFrequencies.end(), 0);
+
+            float pitchFactor = 2.0;
+
+            for (int k = 0; k < nyquistFrequency; ++k) {
+                float shiftedFrequency = analysisFrequencies[k] * pitchFactor;
+                int newBin = floorf(k * pitchFactor + 0.5);
+
+                if (newBin <= nyquistFrequency) {
+                    synthesisMagnitudes[newBin] += analysisMagnitudes[k];
+                    synthesisFrequencies[newBin] += shiftedFrequency; // CHECK BACK AT THIS
+                }
+            }
+
+
 
 
         }
