@@ -184,7 +184,7 @@ namespace pitchShifter {
             std::ranges::fill(synthesisMagnitudes, 0);
             std::ranges::fill(synthesisFrequencies, 0);
 
-            float pitchFactor = 2.0; // hard code pitch shifter
+            float pitchFactor = 0.5; // hard code pitch shifter
 
             for (int k = 0; k < fftSize/2; ++k) {
                 // nearest bin to shifted frequency

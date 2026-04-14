@@ -119,7 +119,7 @@ Since the forward direction of the DTF breaks a signal into its fundamental sinu
 It computes each component of a signal $x[n]$ as the average of the $n$th samples of the DFT's fundamental sinusoids \cite{mcfee_dstbook}.
 The inverse DFT is a crucial component of the phase vocoder as it allows for a signal to be transformed back to the time domain after being modified
 in the frequency domain.In practice, the DFT is much too slow for modern applications. Therefore, applications today use the Fast Fourier Transform (FFT), 
-an optimized algorithm for computing the DFT. A common method is the Cooley and Tukey algorithm, which requires that the input signal length be a power of two. \cite{mcfee_dstbook}. 
+an optimized algorithm for computing the DFT. A common method is the Cooley and Tukey algorithm, which requires that the input signal length be a power of two \cite{mcfee_dstbook}. 
 
 \subsection{Windowing}
 Windowing is a function used to isolate parts of a discrete time signal so that analysis on the signal can be performed on contiguous blocks \cite{barry2008time}.
