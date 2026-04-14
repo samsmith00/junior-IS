@@ -44,8 +44,6 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
-    int pitchFactor;
-
 
 private:
     pitchShifter::Parameters parameters{*this};

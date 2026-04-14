@@ -8,5 +8,7 @@
 namespace pitchShifter {
     struct Parameters {
         explicit Parameters(juce::AudioProcessor&);
+
+        juce::AudioParameterInt& pitchFactor;
     };
 }

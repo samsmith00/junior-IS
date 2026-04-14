@@ -22,10 +22,10 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
 
 }
 
-void AudioPluginAudioProcessorEditor::sliderValueChanged (juce::Slider* slider)
-{
-    processorRef.pitchFactor = pitchShifter.getValue();
-}
+// void AudioPluginAudioProcessorEditor::sliderValueChanged (juce::Slider* slider)
+// {
+//     processorRef.pitchFactor = pitchShifter.getValue();
+// }
 
 AudioPluginAudioProcessorEditor::~AudioPluginAudioProcessorEditor()
 {
