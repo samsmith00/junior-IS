@@ -9,6 +9,17 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
     setSize (400, 300);
+    pitchShifter.setSliderStyle (juce::Slider::SliderStyle::Rotary);
+    pitchShifter.setRange (-5, 5, 1);
+    pitchShifter.setTextBoxStyle (juce::Slider::NoTextBox, false, 90, 0);
+    pitchShifter.setPopupDisplayEnabled (true, true, this);
+    //pitchFactor.setTextValueSuffix ("Pitch Shift");
+    pitchShifter.setValue(0);
+    pitchShifter.addListener(this);
+
+    addAndMakeVisible (pitchShifter);
+
+
 }
 
 AudioPluginAudioProcessorEditor::~AudioPluginAudioProcessorEditor()
