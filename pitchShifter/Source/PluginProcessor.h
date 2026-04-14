@@ -2,6 +2,7 @@
 
 #include <juce_audio_processors/juce_audio_processors.h>
 #include "PitchShifter.h"
+#include "Parameters.h"
 
 //==============================================================================
 class AudioPluginAudioProcessor final : public juce::AudioProcessor
@@ -47,7 +48,9 @@ public:
 
 
 private:
+    pitchShifter::Parameters parameters{*this};
     pitchShifter::PitchShifter pitchShifter[2];
+
 
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (AudioPluginAudioProcessor)

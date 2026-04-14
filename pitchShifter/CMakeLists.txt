@@ -34,6 +34,7 @@ set(SourceFiles
         Source/PluginProcessor.cpp
         Source/PluginProcessor.h
         Source/PitchShifter.h
+        Source/Parameters.h
 )
 
 # Change these to your own preferences

@@ -22,6 +22,11 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
 
 }
 
+void AudioPluginAudioProcessorEditor::sliderValueChanged (juce::Slider* slider)
+{
+    processorRef.pitchFactor = pitchShifter.getValue();
+}
+
 AudioPluginAudioProcessorEditor::~AudioPluginAudioProcessorEditor()
 {
 }
@@ -33,12 +38,17 @@ void AudioPluginAudioProcessorEditor::paint (juce::Graphics& g)
     g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
 
     g.setColour (juce::Colours::white);
+    // set the font size and draw text to the screen
     g.setFont (15.0f);
-    g.drawFittedText ("Hello World!", getLocalBounds(), juce::Justification::centred, 1);
+    g.drawFittedText ("Pitch Shifter", 0, 0, getWidth(), 30, juce::Justification::centred, 1);
 }
 
 void AudioPluginAudioProcessorEditor::resized()
 {
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
+    pitchShifter.setBounds (150, 30, getWidth() / 4, getHeight() / 4);
+
 }
+
+
