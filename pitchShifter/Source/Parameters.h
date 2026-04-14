@@ -10,5 +10,8 @@ namespace pitchShifter {
         explicit Parameters(juce::AudioProcessor&);
 
         juce::AudioParameterInt& pitchFactor;
+
+        JUCE_DECLARE_NON_COPYABLE(Parameters);
+        JUCE_DECLARE_NON_MOVEABLE(Parameters);
     };
 }
