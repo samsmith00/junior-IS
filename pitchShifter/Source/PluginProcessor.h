@@ -2,7 +2,6 @@
 
 #include <juce_audio_processors/juce_audio_processors.h>
 #include "PitchShifter.h"
-#include "Parameters.h"
 
 //==============================================================================
 class AudioPluginAudioProcessor final : public juce::AudioProcessor
@@ -44,9 +43,13 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+    juce::AudioProcessorValueTreeState apvts;
+    int pitchFactor;
 
 private:
-    pitchShifter::Parameters parameters{*this};
+
+    juce::AudioProcessorValueTreeState::ParameterLayout createParameters();
+    //pitchShifter::Parameters parameters{*this};
     pitchShifter::PitchShifter pitchShifter[2];
 
 

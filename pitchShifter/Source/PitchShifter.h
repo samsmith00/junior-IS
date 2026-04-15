@@ -32,6 +32,7 @@ namespace pitchShifter {
         }
 
         void process(float* channelData, int numSamples) noexcept {
+            //psFactor = pitchFactor;
             // loop over channel samples
             for (int i = 0; i < numSamples; ++i) {
                 channelData[i] = processSample(channelData[i]);
@@ -55,6 +56,9 @@ namespace pitchShifter {
         }
 
         private:
+
+        std::atomic<float> psFactor;
+
         // FFT variables
         static constexpr int fftOrder = 10;
         static constexpr int fftSize = 1 << fftOrder;      // 1024 samples
@@ -236,6 +240,10 @@ namespace pitchShifter {
             else {
                 return fmodf(phase - M_PI, 2 * M_PI) + M_PI;
             }
+
+        }
+
+        void convertPitchShiftFactorToSemitones(auto psFactor) {
 
         }
 

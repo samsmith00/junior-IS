@@ -10,7 +10,7 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
                       #endif
                        .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                      #endif
-                       )
+                       ), apvts (*this, nullptr, "Parameters", createParameters())
 {
 }
 
@@ -133,19 +133,7 @@ bool AudioPluginAudioProcessor::isBusesLayoutSupported (const BusesLayout& layou
 void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
                                               juce::MidiBuffer& midiMessages)
 {
-    //juce::ignoreUnused (midiMessages);
-
-    // Handle MIDI messages
-    juce::MidiBuffer processedMidi;
-    for (const auto metadata: midiMessages) {
-        auto message = metadata.getMessage();
-        const auto time = metadata.samplePosition;
-        if (message.isNoteOn()) {
-            message = juce::MidiMessage::noteOn(message.getChannel(), message.getNoteNumber(), (juce::uint8) pitchFactor);
-        }
-        processedMidi.addEvent (message, time);
-    }
-    midiMessages.swapWith (processedMidi);
+    juce::ignoreUnused (midiMessages);
 
 
     // Handle pitch shifting
@@ -153,6 +141,8 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
     auto numSamples = buffer.getNumSamples();
+
+    auto psFactor = apvts.getRawParameterValue("PS");
 
     // In case we have more outputs than inputs, this code clears any output
     // channels that didn't contain input data, (because these aren't
@@ -213,4 +203,20 @@ void AudioPluginAudioProcessor::setStateInformation (const void* data, int sizeI
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()
 {
     return new AudioPluginAudioProcessor();
+}
+
+juce::AudioProcessorValueTreeState::ParameterLayout AudioPluginAudioProcessor::createParameters()
+{
+    std::vector<std::unique_ptr<juce::RangedAudioParameter>> parameters;
+
+    parameters.push_back(std::make_unique<juce::AudioParameterInt>(
+        "PS",
+        "Pitch Shifter",
+        -5,
+        5,
+        0
+        ));
+
+    return {parameters.begin(), parameters.end()};
+
 }

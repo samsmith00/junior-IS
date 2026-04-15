@@ -1,3 +1,5 @@
+#pragma once
+
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
@@ -13,19 +15,18 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
     pitchShifter.setRange (-5, 5, 1);
     pitchShifter.setTextBoxStyle (juce::Slider::NoTextBox, false, 90, 0);
     pitchShifter.setPopupDisplayEnabled (true, true, this);
-    //pitchFactor.setTextValueSuffix ("Pitch Shift");
     pitchShifter.setValue(0);
     pitchShifter.addListener(this);
 
     addAndMakeVisible (pitchShifter);
-
+    pitchShifterAttachment = std::make_unique<juce::AudioProcessorValueTreeState::SliderAttachment>(processorRef.apvts, "PS", pitchShifter);
 
 }
 
-// void AudioPluginAudioProcessorEditor::sliderValueChanged (juce::Slider* slider)
-// {
-//     processorRef.pitchFactor = pitchShifter.getValue();
-// }
+void AudioPluginAudioProcessorEditor::sliderValueChanged (juce::Slider* slider)
+{
+    processorRef.pitchFactor = pitchShifter.getValue();
+}
 
 AudioPluginAudioProcessorEditor::~AudioPluginAudioProcessorEditor()
 {
