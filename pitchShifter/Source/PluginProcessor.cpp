@@ -212,8 +212,8 @@ juce::AudioProcessorValueTreeState::ParameterLayout AudioPluginAudioProcessor::c
     parameters.push_back(std::make_unique<juce::AudioParameterInt>(
         "PS",
         "Pitch Shifter",
-        -5,
-        5,
+        -12,
+        12,
         0
         ));
 

@@ -12,7 +12,7 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAud
     // editor's size to whatever you need it to be.
     setSize (400, 300);
     pitchShifter.setSliderStyle (juce::Slider::SliderStyle::Rotary);
-    pitchShifter.setRange (-5, 5, 1);
+    //pitchShifter.setRange (-12, 12, 1);
     pitchShifter.setTextBoxStyle (juce::Slider::NoTextBox, false, 90, 0);
     pitchShifter.setPopupDisplayEnabled (true, true, this);
     pitchShifter.setValue(0);
@@ -48,7 +48,7 @@ void AudioPluginAudioProcessorEditor::resized()
 {
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
-    pitchShifter.setBounds (150, 30, getWidth() / 4, getHeight() / 4);
+    pitchShifter.setBounds (150, 30, getWidth() / 3, getHeight() / 3);
 
 }
 
