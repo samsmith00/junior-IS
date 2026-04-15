@@ -167,7 +167,7 @@ void AudioPluginAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
         auto* channelData = buffer.getWritePointer (channel);
 
         // ..do something to the data...
-        pitchShifter[channel].process(channelData, numSamples);
+        pitchShifter[channel].process(channelData, numSamples, psFactor->load());
     }
 }
 

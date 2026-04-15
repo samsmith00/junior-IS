@@ -27,12 +27,14 @@ namespace pitchShifter {
 
         void prepare(double sampleRate, int expectedMaxFramesPerBlock) {
             juce::ignoreUnused (expectedMaxFramesPerBlock);
+
             psSampleRate = sampleRate;
             reset();
         }
 
-        void process(float* channelData, int numSamples) noexcept {
-            //psFactor = pitchFactor;
+        void process(float* channelData, int numSamples, auto pitchFactor) noexcept {
+            psFactor = convertPitchShiftFactorToSemitones(pitchFactor);
+
             // loop over channel samples
             for (int i = 0; i < numSamples; ++i) {
                 channelData[i] = processSample(channelData[i]);
@@ -57,7 +59,7 @@ namespace pitchShifter {
 
         private:
 
-        std::atomic<float> psFactor;
+        float psFactor;
 
         // FFT variables
         static constexpr int fftOrder = 10;
@@ -188,13 +190,13 @@ namespace pitchShifter {
             std::ranges::fill(synthesisMagnitudes, 0);
             std::ranges::fill(synthesisFrequencies, 0);
 
-            float pitchFactor = 0.5; // hard code pitch shifter
+            //float pitchFactor = 0.6674; // hard code pitch shifter
 
             for (int k = 0; k < fftSize/2; ++k) {
                 // nearest bin to shifted frequency
-                int newBin = floorf(k * pitchFactor + 0.5);
+                int newBin = floorf(k * psFactor + 0.5);
 
-                float shiftedFrequency = analysisFrequencies[k] * pitchFactor;
+                float shiftedFrequency = analysisFrequencies[k] * psFactor;
 
                 if (newBin <= fftSize/2) {
                     synthesisMagnitudes[newBin] += analysisMagnitudes[k];
@@ -243,8 +245,8 @@ namespace pitchShifter {
 
         }
 
-        void convertPitchShiftFactorToSemitones(auto psFactor) {
-
+        float convertPitchShiftFactorToSemitones(auto psFactor) {
+            return std::pow(2, psFactor/12);
         }
 
     };
