@@ -74,22 +74,19 @@ a real-time pitch-shifting audio plugin.
 % \subsection{Outline of Remaining Chapters}
 This paper begins with a comprehensive overview of the mathematics needed to understand the phase vocoder
 algorithm. It will begin with an explanation of the Discrete Fourier Transform, the backbone of signal processing, then 
-we will examine windowing, why we need it and what problems it solves. Finally, we will examine the  Short-Time Fourier Transform (STFT)
+it will examine windowing, why it is need it and what problems it solves. Finally, it will examine the  Short-Time Fourier Transform (STFT)
 which is the core analysis algorithm used in the phase vocoder. 
-
 The next section will provide a deep intuition for the phase vocoder algorithm where the goal is to connect the
 mathematical concepts highlighted in the background section to the processing chain that comprises the phase vocoder algorithm. 
 The section will be divided based on the three fundamental steps that make up the phase vocoder algorithm: analysis, modification and synthesis. 
-
 Next, we will translate the mathematical concepts built up by the previous sections into a coherent program architecture. The audio plugin will be 
 constructed in the JUCE framework, an open-source c++ framework designed to build audio plugins and and applications, 
-
-Finally, the following will evaluate output quality using metrics such as tonality and spectral flatness (noise) will be 
-evaluated against to test how good the phase vocoder is at modifying a given input signal.
-
-The conclusion follows the results chapter and will primarly focus on results, future work and optimizations that can be done 
+Finally, the conclusion follows the results chapter and will primarly focus on results, future work and optimizations that can be done 
 on this project. Additionally, this section will provide insight into any errors or unoptimized processes in this project and offer
 any additional improvements or next steps. 
+% Finally, the following will evaluate output quality using metrics such as tonality and spectral flatness (noise) will be 
+% evaluated against to test how good the phase vocoder is at modifying a given input signal.
+
 
 
 \section{Background}
