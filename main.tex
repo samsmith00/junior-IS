@@ -34,19 +34,17 @@ are now competing with highly technical and lucrative software companies that sp
 is to design and implement a high-demand audio plugin for modern music production software. 
 
 The plugin in question is a pitch shifter, a widely used effect that digitally modifies an input signal in real time. 
-Its core functionality is to increase or decrease the input signal's pitch by algorithmically altering every
-frequency component in a signal \cite{rai2019analysis}. More importantly, it allows for a guitar player to quickly change the 
-tuning of their guitar. This solves the common problem of a guitar player wanting to play a particular song in a certin tuning 
-but their guitar does not support said tuning. Thus, the pitch shifter solves this problem by digitally modifying the guitar signal 
-to the desired tuning before it reaches the amplifier. This is especially useful for guitarists who want to detune their guitar (tune the guitar to a lower pitch). 
+Its core function is to increase or decrease the input signal's pitch by algorithmically altering every
+frequency component in a signal \cite{rai2019analysis}. A common problem many guitarists encounter is uptuning and downtuning a guitar.
 Before detuning a guitar, one must consider a number of physical factors, such as the strings' gauge (thickness), 
 the width of the nut, and the length and tension of the neck. If even one of these factors does not support a major detuning, 
 the guitar cannot be safely or effectively retuned. A pitch shifter removes these physical limitations by solving the tuning problem 
-through a purely software-based approach.
+through a purely software-based approach. The pitch shifter digitally modifies the guitar signal 
+to the desired tuning before it reaches the amplifier. This not only saves time, but also extends the range of the guitar.
 
 
-\subsection{Pitch Shifting}
-Pitch shifting is a desirable signal processing effect for a variety of practical reasons. 
+% \subsection{Pitch Shifting}
+Pitch shifting is a desirable signal processing effect used for a variety of practical reasons. 
 Historically, pitch manipulation emerged from research in vocal processing 
 (giving rise to the term `vocoder' a concatenation of the words `vocal' and `coder') \cite{dolson1986phase}. 
 Today, pitch-shifting algorithms are widely used in music production, film, 
@@ -56,23 +54,24 @@ modification techniques to adjust a singer's intonation while preserving
 timing and vocal characteristics.
 
 Pitch shifting is not limited to vocal signals, however, it is also commonly applied 
-to instrumental audio. For example, electric guitarists use pitch-shifting 
+to instrumental audio. For example, electric guitarists use pitch-shifting % Maybe redo
 pedals and digital audio plugins to alter tuning without physically adjusting 
 string tension. This capability allows musicians to explore alternate tunings
 without modifying their instrument hardware or spending vast amounts of time retuning extended ranged guitars. 
 Such applications highlight the broad practical demand for high-quality, 
 real-time pitch-shifting algorithms.
 
-\subsection{The Phase Vocoder Approach}
+% \subsection{The Phase Vocoder Approach}
+To implement the pitch shifting audio plugin the phase vocoder paradigm will be used. 
 The phase vocoder is a signal processing technique used for both time-scale and pitch modifications.
 This algorithm was chosen to be the core processing algorithm for this project due to the fact that
 the family of vocoder algorithms is known for their reliability, ability to handle polyphonic signals, 
 and their widespread adoption many modern signal processing applications. Furthermore, the phase vocoder
-is a real-time algorithm, meaning it has the capability to execute, in its entirety, in an unperceivable 
+is a real-time algorithm, meaning it has the capability to run, in its entirety, in an unperceivable 
 amount of time. Hence, this algorithm, along with the JUCE audio plugin framework, will provide a basis for creating 
 a real-time pitch-shifting audio plugin. 
 
-\subsection{Outline of Remaining Chapters}
+% \subsection{Outline of Remaining Chapters}
 This paper begins with a comprehensive overview of the mathematics needed to understand the phase vocoder
 algorithm. It will begin with an explanation of the Discrete Fourier Transform, the backbone of signal processing, then 
 we will examine windowing, why we need it and what problems it solves. Finally, we will examine the  Short-Time Fourier Transform (STFT)
@@ -144,13 +143,18 @@ This leakage manifests itself as sidelobes and causes the calculated frequency o
 \begin{figure}[H] 
 \begin{center}
   \includegraphics[width=8cm]{imgs/pureWave.png}
-  \includegraphics[width=8cm]{imgs/pureFreq.png} 
+  \includegraphics[width=8cm]{imgs/pureFreq.png}
   \includegraphics[width=8cm]{imgs/discontinuousWave.png}
   \includegraphics[width=8cm]{imgs/leakageFreq.png}
 \caption{Illustration of spectral leakage. The top row shows a continuous signal segment that begins and ends at the same value, resulting in an accurate frequency representation. The bottom row shows a discontinuous signal segment, where the endpoints do not align, leading to spectral leakage and a spread in the frequency-domain representation.} 
 \label{fig:spectral-leakage}
  \end{center}
 \end{figure}
+Figure~\ref{fig:spectral-leakage} demonstrates how the same wave can generate vastly different frequency estimations. The top row demonstrates that 
+when the wave is continuous at its edges, it produces a clear frequency estimation. This is depicted by the second graph in the top row. When the same wave
+is forced to be discontinuous at its edges, the first plot in the bottom row, it produces a much less accurate frequency calculation as seen in the second plot 
+in the bottom row. 
+
 In order to mitigate the negative consequences a discontinuous signal produces, a window function is used to force continuity at the signal's edges. 
 In Figure~\ref{fig:non-windowed-and-windowed}, the Hanning window function was used to shape the signal, however, there are multiple windowing functions
 such as the Rectangle window function, Triangle window function and Hamming window function \cite{mcfee_dstbook}. For this project, the Hanning window will be employed, 
@@ -279,6 +283,10 @@ The output of the analysis step is a collection of $M$ frequency bins (see Secti
 the magnitude and phase information for a particular frequency \cite{reiss2014audioeffects}. At this point, the signal frame can be modified in the 
 frequency domain, such as altering the pitch.
 
+
+\begin{itemize}
+  \item ADD GRAPHI OF PROCESS
+\end{itemize}
 
 % This section will cover signal processing, connect the DFT to the phase vocoder algorithm and conclude with a discussion on windowing
 
@@ -412,8 +420,9 @@ real-time audio plugins. Additionally, JUCE provides a wide range of built-in li
 Under JUCE's framework, the pitch shifter processes contiguous blocks of an input signal. The signal is passed to the pitch shifter using JUCE's PluginProcessor.ProcessBlock() method. In this method, 
 the audio buffer (block of signal) is divided into its respective channels. Then for each channel, its audio samples (discrete data values) are passed to the pitch shifter for futher processing.
 Once in the scope of the pitch shifter, each sample in the channel data is stored in an input buffer. Once this buffer has 1024 samples, the buffer will be windowed and the FFT will be computed to 
-obtain the signal's frequency, magnitude and phase information. Now that the signal is represented by buffer of complex numbers (frequency domain representaiton) a more accurate frequency estimation of 
-the signal is computed using current and prior phase information. 
+obtain the signal's magnitude and phase information accrosse frequency bins. To pitch shift the more accurate frequency estimation, a pitch factor is used to scale the frequency components of the signal. 
+Once modified the signal is reconstructed by using prior phase information to enforce continuity accross frames, and the inverse STFT is computed to convert the signal back to the time domain. JUCE then takes 
+the modified sample data and passes it back to the DAW where it can then be sent to speakers, or additional plugins for further processing. 
 
 % \begin{itemize}
 %   \item I built a pitch shifting audio plugin

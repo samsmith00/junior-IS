@@ -8,7 +8,6 @@
 #include <juce_core/juce_core.h>
 #include <juce_dsp/juce_dsp.h>
 #include <ranges>
-#include <iostream>
 #include <launch.h>
 
 
