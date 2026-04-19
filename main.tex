@@ -65,10 +65,10 @@ real-time pitch-shifting algorithms.
 To implement the pitch shifting audio plugin the phase vocoder paradigm will be used. 
 The phase vocoder is a signal processing technique used for both time-scale and pitch modifications.
 This algorithm was chosen to be the core processing algorithm for this project due to the fact that
-the family of vocoder algorithms is known for their reliability, ability to handle polyphonic signals, 
-and their widespread adoption many modern signal processing applications. Furthermore, the phase vocoder
-is a real-time algorithm, meaning it has the capability to run, in its entirety, in an unperceivable 
-amount of time. Hence, this algorithm, along with the JUCE audio plugin framework, will provide a basis for creating 
+it is known for its reliability, ability to handle polyphonic signals, 
+and widespread adoption many modern signal processing applications. Furthermore, the phase vocoder
+is a real-time algorithm; meaning it has the capability to pitch shift an audio signal in a a time frame spanning
+milliseconds. Hence, the phase vocoder, along with the JUCE audio plugin framework, will provide a basis for creating 
 a real-time pitch-shifting audio plugin. 
 
 % \subsection{Outline of Remaining Chapters}
