@@ -135,9 +135,9 @@ where every value outside of the window's main lobe is reduced to zero \cite{roy
 \end{figure}
 
 As depicted  by Figure~\ref{fig:non-windowed-and-windowed}, after applying the window function to the example signal, the edges of the signal
-tend toward zero. This byproduct of the window function is an important for the phase vocoder. Without windowing, the signal may be discontinuous at its edges, 
-meaning the beginning and end do not line up. These discontinuities cause spectral leakage in the frequency domain.
-This leakage manifests itself as sidelobes and causes the calculated frequency of the signal to be less accurate \cite{reiss2014audioeffects}.
+tend toward zero. This byproduct of the window function is an important characteristic, and helps to make the phase vocoder more accurate. Without windowing, the signal may be discontinuous at its edges, 
+meaning the beginning and end of the signal do not line up. A signal that is not continuous at its edges causes spectral leakage in the frequency domain 
+where the leakage manifests itself as sidelobes and results in the calculated frequency of the signal to be less accurate \cite{reiss2014audioeffects}.
 
 
 \begin{figure}[H] 
@@ -150,12 +150,10 @@ This leakage manifests itself as sidelobes and causes the calculated frequency o
 \label{fig:spectral-leakage}
  \end{center}
 \end{figure}
-Figure~\ref{fig:spectral-leakage} demonstrates how the same wave can generate vastly different frequency estimations. The top row demonstrates that 
-when the wave is continuous at its edges, it produces a clear frequency estimation. This is depicted by the second graph in the top row. When the same wave
-is forced to be discontinuous at its edges, the first plot in the bottom row, it produces a much less accurate frequency calculation as seen in the second plot 
-in the bottom row. 
-
-In order to mitigate the negative consequences a discontinuous signal produces, a window function is used to force continuity at the signal's edges. 
+Figure~\ref{fig:spectral-leakage} demonstrates how the same wave can generate vastly different frequency domain resolutions. The top row shows a continuous signal segment that begins and ends at the same value, 
+resulting in an accurate frequency estimate. Indicated by the sharp spectral peak in the corresponding frequency-domain plot.
+When the same wave is segmented and made discontinuous at its edges, as shown by the first graph in the bottom row, it produces spectral leakage, a distribution of the signal's energy across its frequency bins.
+In order to mitigate the spectral leakage a discontinuous signal produces, a window function is used to force continuity at the signal's edges. 
 In Figure~\ref{fig:non-windowed-and-windowed}, the Hanning window function was used to shape the signal, however, there are multiple windowing functions
 such as the Rectangle window function, Triangle window function and Hamming window function \cite{mcfee_dstbook}. For this project, the Hanning window will be employed, 
 as it produces a smoother and more continuous signal during the resynthesis step \cite{degotzen2000traditional}. 
@@ -171,9 +169,10 @@ as it produces a smoother and more continuous signal during the resynthesis step
 \label{fig:windowing-effect}
  \end{center}
 \end{figure}
-Notice that the Hanning frequency plot tapers off much more rapidly than the rectangle frequency plot. The regions of a frequency spectrum 
+
+Notice in Figure~\ref{fig:windowing-effect} that the Hanning frequency plot tapers off much more rapidly than the rectangle frequency plot. The regions of a frequency spectrum 
 outside of the main peeks are referred to as side lobes. If the side lobes are too prominant in the windowed function, 
-subsequent frequency estimations will be less accruate. 
+subsequent frequency estimations will be less accruate. Hence, a windowing function is used by the phase vocder in order to compute more accruate frequency calculations.
 
 
 \subsection{Short-Time Fourier Transform}
