@@ -90,12 +90,15 @@ any additional improvements or next steps.
 
 
 \section{Background}
+% \begin{itemize}
+%   \item need something here
+% \end{itemize}
 
-\subsection{Discrete Fourier Transform}
+%\subsection{Discrete Fourier Transform}
 The Discrete Fourier Transform (DFT) is a fundamental tool used in digital signal processing that 
 enables sophisticated analysis and synthesis of discrete-time signals \cite{lyons2010understanding}.   
-The DFT transforms a signal from the time domain into its frequency-domain representation,  
-allowing the signal to be expressed as a sum of sinusoids \cite{lyons2010understanding}. The DFT accepts a finite 
+The DFT transforms a signal from the time domain into its frequency domain representation,  
+causing the signal to be expressed as a sum of sinusoids \cite{lyons2010understanding}. The DFT accepts a finite 
 sequence of $N$ discrete samples and produces $N$ complex-valued outputs, each representing the signal's magnitude 
 and phase at one of $N$ evenly-spaced frequency bins. 
 The output of the DFT can be better understood as a sequence of $N$ complex numbers representing amplitude and phase for each analysis frequency \cite{mcfee_dstbook}.  
@@ -103,24 +106,24 @@ Mathematically, the DFT is defined as:
 \begin{align}
   X[m] = \sum_{n=0}^{N-1} x[n] \, e^{-j 2\pi n\frac{m}{N}}
 \end{align}
-where $N$ is the number of samples from the input signal $x[n]$, $n$ denotes the time-domain index, $m$ represents the frequency bin index, 
-$n$ is the index of the input sequence in the time-domain and $j = \sqrt{-1}$. Each coefficient in $X[m]$ is complex-valued and can be 
+where $N$ is the number of samples, $x[n]$ is the input signal,  $n$ is the the time domain index, $m$ is the frequency bin index, 
+$n$ is the index of the input sequence in the time domain, and $j = \sqrt{-1}$. Each coefficient in $X[m]$ is complex-valued and can be 
 expressed in terms of magnitude and phase, which describe the contribution of a corresponding frequency component to the overall signal \cite{mcfee_dstbook}.
 Another important property of the DFT is that it is invertible; meaning a signal can be transformed from the frequency domain to the time domain. It can be described
 mathematically as: 
 \begin{align}
-  x[n] = \frac{1}{N} \sum_{n=0}^{N-1} X[m] \, e^{j 2\pi n\frac{m}{N}}
+  x[n] = \frac{1}{N} \sum_{n=0}^{N-1} X[m] \, e^{j 2\pi n\frac{m}{N}}.
 \end{align}
 Since the forward direction of the DTF breaks a signal into its fundamental sinusoids, the inverse DFT perfoms the opposite.
 It computes each component of a signal $x[n]$ as the average of the $n$th samples of the DFT's fundamental sinusoids \cite{mcfee_dstbook}.
-The inverse DFT is a crucial component of the phase vocoder as it allows for a signal to be transformed back to the time domain after being modified
-in the frequency domain.In practice, the DFT is much too slow for modern applications. Therefore, applications today use the Fast Fourier Transform (FFT), 
-an optimized algorithm for computing the DFT. A common method is the Cooley and Tukey algorithm, which requires that the input signal length be a power of two \cite{mcfee_dstbook}. 
+The inverse DFT is an important component of the phase vocoder as it allows for a signal to be transformed back to the time domain after being modified
+in the frequency domain. In practice, the DFT is much too slow for modern applications. Therefore, applications today use the Fast Fourier Transform (FFT), 
+an optimized algorithm for computing the DFT. A common method is the Cooley and Tukey algorithm, which requires that the input signal length be a power of two. 
 
 \subsection{Windowing}
-Windowing is a function used to isolate parts of a discrete time signal so that analysis on the signal can be performed on contiguous blocks \cite{barry2008time}.
+Windowing is a method used to isolate parts of a discrete time signal so that only a small portion of the signal is analyzed at a time \cite{barry2008time}.
 More specifically, the input signal is multiplied by a windowing function whose domain is nonzero for a particular range. This results in a small localized snapshot of the input signal
-where every value outside of the window's domain is reduced to zero \cite{royer2019pitch}. Figure 1 below demonstrates the functionality of a window function. 
+where every value outside of the window's main lobe is reduced to zero \cite{royer2019pitch}. Figure 1 below demonstrates the functionality of a window function. 
 
 \begin{figure}[H] 
 \begin{center}
@@ -132,7 +135,7 @@ where every value outside of the window's domain is reduced to zero \cite{royer2
 \end{figure}
 
 As depicted  by Figure~\ref{fig:non-windowed-and-windowed}, after applying the window function to the example signal, the edges of the signal
-tend toward zero. This byproduct of the window function is crucial for the phase vocoder. Without windowing, the signal may be discontinuous at its edges, 
+tend toward zero. This byproduct of the window function is an important for the phase vocoder. Without windowing, the signal may be discontinuous at its edges, 
 meaning the beginning and end do not line up. These discontinuities cause spectral leakage in the frequency domain.
 This leakage manifests itself as sidelobes and causes the calculated frequency of the signal to be less accurate \cite{reiss2014audioeffects}.
 
