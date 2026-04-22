@@ -11,6 +11,9 @@
 \usepackage{float}
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{caption}
+\captionsetup{font=small}
+
 
 \title{\textbf{A Phase Vocoder Approach To Pitch Shifting}}
 \author{Sam Smith}
@@ -96,34 +99,33 @@ any additional improvements or next steps.
 
 %\subsection{Discrete Fourier Transform}
 The Discrete Fourier Transform (DFT) is a fundamental tool used in digital signal processing that 
-enables sophisticated analysis and synthesis of discrete-time signals \cite{lyons2010understanding}.   
-The DFT transforms a signal from the time domain into its frequency domain representation,  
-causing the signal to be expressed as a sum of sinusoids \cite{lyons2010understanding}. The DFT accepts a finite 
-sequence of $N$ discrete samples and produces $N$ complex-valued outputs, each representing the signal's magnitude 
-and phase at one of $N$ evenly-spaced frequency bins. 
-The output of the DFT can be better understood as a sequence of $N$ complex numbers representing amplitude and phase for each analysis frequency \cite{mcfee_dstbook}.  
-Mathematically, the DFT is defined as: 
+enables sophisticated analysis and synthesis of discrete time signals \cite{lyons2010understanding}.   
+The DFT transforms a signal from the time domain into its frequency domain representation, and does so by   
+expressing it as a sum of sinusoids \cite{lyons2010understanding}. The input of the DFT is a finite 
+sequence of $N$ discrete signal samples. The output is $N$ evenly spaced frequency bins and each bin contains a complex number encoding the
+amplitude and phase for each analysis frequency \cite{mcfee_dstbook}.  
+Mathematically, the DFT is defined as:
 \begin{align}
-  X[m] = \sum_{n=0}^{N-1} x[n] \, e^{-j 2\pi n\frac{m}{N}}
+  X[m] = \sum_{n=0}^{N-1} x[n] \, e^{-j 2\pi nm/N}
 \end{align}
-where $N$ is the number of samples, $x[n]$ is the input signal,  $n$ is the the time domain index, $m$ is the frequency bin index, 
-$n$ is the index of the input sequence in the time domain, and $j = \sqrt{-1}$. Each coefficient in $X[m]$ is complex-valued and can be 
-expressed in terms of magnitude and phase, which describe the contribution of a corresponding frequency component to the overall signal \cite{mcfee_dstbook}.
-Another important property of the DFT is that it is invertible; meaning a signal can be transformed from the frequency domain to the time domain. It can be described
-mathematically as: 
+where $N$ is the number of samples, $x[n]$ is the input signal, $n$ is the time-domain sample index, $m$ is the frequency bin index, 
+and $j = \sqrt{-1}$. The output $X[m]$ is a sequence of $N$ complex values, indexed from $m = 0$ to $m = N-1$, where each value 
+corresponds to a frequency bin. 
+% After the DFT is computed each index in $X[m]$ is a frequency bin: $X[0], X[1], ... , X[N]$. is complex-valued and can be 
+% expressed in terms of magnitude and phase, which describe the contribution of a corresponding frequency component to the overall signal \cite{mcfee_dstbook}.
+Another important property of the DFT is its invertibility. The inverse DFT (IDFT) transforms a signal from the frequency domain to the time domain. It is given by: 
 \begin{align}
-  x[n] = \frac{1}{N} \sum_{n=0}^{N-1} X[m] \, e^{j 2\pi n\frac{m}{N}}.
+  x[n] = \frac{1}{N} \sum_{m=0}^{N-1} X[m] \, e^{j 2\pi n\frac{m}{N}}.
 \end{align}
-Since the forward direction of the DTF breaks a signal into its fundamental sinusoids, the inverse DFT perfoms the opposite.
-It computes each component of a signal $x[n]$ as the average of the $n$th samples of the DFT's fundamental sinusoids \cite{mcfee_dstbook}.
-The inverse DFT is an important component of the phase vocoder as it allows for a signal to be transformed back to the time domain after being modified
+The IDFT computes each component of a signal $x[n]$ as the average of the $n$th samples of the DFT's fundamental sinusoids \cite{mcfee_dstbook}. 
+It is an important component of the phase vocoder as it transforms a signal back to the time domain after being modified
 in the frequency domain. In practice, the DFT is much too slow for modern applications. Therefore, applications today use the Fast Fourier Transform (FFT), 
-an optimized algorithm for computing the DFT. A common method is the Cooley and Tukey algorithm, which requires that the input signal length be a power of two. 
+an optimized algorithm for computing the DFT.
 
 \subsection{Windowing}
-Windowing is a method used to isolate parts of a discrete time signal so that only a small portion of the signal is analyzed at a time \cite{barry2008time}.
-More specifically, the input signal is multiplied by a windowing function whose domain is nonzero for a particular range. This results in a small localized snapshot of the input signal
-where every value outside of the window's main lobe is reduced to zero \cite{royer2019pitch}. Figure 1 below demonstrates the functionality of a window function. 
+Windowing is a method used to isolate chunks of a discrete time signal so that only a small portion of the signal is analyzed at a time \cite{barry2008time}.
+More specifically, the input signal is multiplied by a windowing function that is nonzero over a finite interval. This results in a small localized snapshot of the input signal
+where every value outside of the window's central peak is reduced toward zero\cite{royer2019pitch}. Figure 1 below demonstrates the functionality of a window function. 
 
 \begin{figure}[H] 
 \begin{center}
@@ -134,10 +136,10 @@ where every value outside of the window's main lobe is reduced to zero \cite{roy
  \end{center}
 \end{figure}
 
-As depicted  by Figure~\ref{fig:non-windowed-and-windowed}, after applying the window function to the example signal, the edges of the signal
-tend toward zero. This byproduct of the window function is an important characteristic, and helps to make the phase vocoder more accurate. Without windowing, the signal may be discontinuous at its edges, 
-meaning the beginning and end of the signal do not line up. A signal that is not continuous at its edges causes spectral leakage in the frequency domain 
-where the leakage manifests itself as sidelobes and results in the calculated frequency of the signal to be less accurate \cite{reiss2014audioeffects}.
+As depicted by Figure~\ref{fig:non-windowed-and-windowed}, after applying the window function to the example signal, the sample values near the edges of the signal
+go toward zero. This property of the window function is an important characteristic as it makes frequency estimations computed by the phase vocoder more accurate. Without windowing, the signal may be discontinuous at its edges: the beginning and end of the signal do not line up. 
+% A discontinuous signal causes spectral leakage in the frequency domain 
+% where the leakage manifests itself as sidelobes and results in the calculated frequency of the signal to be less accurate \cite{reiss2014audioeffects}.
 
 
 \begin{figure}[H] 
@@ -150,13 +152,13 @@ where the leakage manifests itself as sidelobes and results in the calculated fr
 \label{fig:spectral-leakage}
  \end{center}
 \end{figure}
-Figure~\ref{fig:spectral-leakage} demonstrates how the same wave can generate vastly different frequency domain resolutions. The top row shows a continuous signal segment that begins and ends at the same value, 
-resulting in an accurate frequency estimate. Indicated by the sharp spectral peak in the corresponding frequency-domain plot.
-When the same wave is segmented and made discontinuous at its edges, as shown by the first graph in the bottom row, it produces spectral leakage, a distribution of the signal's energy across its frequency bins.
-In order to mitigate the spectral leakage a discontinuous signal produces, a window function is used to force continuity at the signal's edges. 
+Figure~\ref{fig:spectral-leakage} demonstrates how the same wave can generate different frequency domain representations. The top row shows a continuous signal segment that begins and ends at the same value, 
+resulting in an accurate frequency estimate, as shown by the sharp spectral peak in the corresponding frequency domain plot.
+When the same wave is segmented and made discontinuous at its edges, as shown by the first graph in the bottom row, it generates spectral leakage, a distribution of the signal's energy across its frequency bins.
+In order to mitigate the spectral leakage produced by a discontinuous signal, a window function is used to reduce discontinuities at the signal's edges. 
 In Figure~\ref{fig:non-windowed-and-windowed}, the Hanning window function was used to shape the signal, however, there are multiple windowing functions
-such as the Rectangle window function, Triangle window function and Hamming window function \cite{mcfee_dstbook}. For this project, the Hanning window will be employed, 
-as it produces a smoother and more continuous signal during the resynthesis step \cite{degotzen2000traditional}. 
+such as the rectangular, triangular, and Hamming window functions \cite{mcfee_dstbook}. For this project, the Hanning window will be employed 
+as it is commonly used in modern phase vocoder implementations and produces a smoother, more continuous signal than other windowing functions \cite{degotzen2000traditional} \cite{barry2008time}. 
 
 \begin{figure}[H] 
 \begin{center}
@@ -165,14 +167,14 @@ as it produces a smoother and more continuous signal during the resynthesis step
   \includegraphics[width=8cm]{imgs/rectWindowFFT.png} 
   \includegraphics[width=8cm]{imgs/hannWindowFFT.png}
 
-\caption{Illustration of the windowing effect. The top row shows the rectangle windowed and Hanning windowed signals. The bottom row shows their corresponding frequency plots. Applying the Hanning window reduces spectral leakage, making the main frequency component more accurately represented.}
+\caption{Illustration of the windowing effect. The top row shows the signals after applying a rectangular window and a Hann window. The bottom row shows their corresponding frequency plots. Applying the Hanning window reduces spectral leakage, making the main frequency component more accurately represented.}
 \label{fig:windowing-effect}
  \end{center}
 \end{figure}
 
-Notice in Figure~\ref{fig:windowing-effect} that the Hanning frequency plot tapers off much more rapidly than the rectangle frequency plot. The regions of a frequency spectrum 
-outside of the main peeks are referred to as side lobes. If the side lobes are too prominant in the windowed function, 
-subsequent frequency estimations will be less accruate. Hence, a windowing function is used by the phase vocder in order to compute more accruate frequency calculations.
+Notice in Figure~\ref{fig:windowing-effect} that the Hanning frequency plot (second row) tapers off much more rapidly than the rectangular spectrum. The regions of a frequency spectrum 
+outside of the main peaks are referred to as sidelobes. If the sidelobes are too prominent in the frequency representation, 
+frequency estimations will be less accurate. Hence, a windowing function is used by the phase vocoder to reduce spectral leakage and compute more accurate frequency estimations.
 
 
 \subsection{Short-Time Fourier Transform}
