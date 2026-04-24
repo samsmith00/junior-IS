@@ -172,35 +172,41 @@ as it is commonly used in modern phase vocoder implementations and produces a sm
  \end{center}
 \end{figure}
 
-Notice in Figure~\ref{fig:windowing-effect} that the Hanning frequency plot (second row) tapers off much more rapidly than the rectangular spectrum. The regions of a frequency spectrum 
+In Figure~\ref{fig:windowing-effect} that the Hanning frequency plot (second row) tapers off much more rapidly than the rectangular spectrum. The regions of a frequency spectrum 
 outside of the main peaks are referred to as sidelobes. If the sidelobes are too prominent in the frequency representation, 
 frequency estimations will be less accurate. Hence, a windowing function is used by the phase vocoder to reduce spectral leakage and compute more accurate frequency estimations.
 
 
 \subsection{Short-Time Fourier Transform}
-The Short-Time Fourier Transform (STFT) is a time-frequency representation used to compute the DFT of contiguous windowed segments of a signal. In practice, 
+The Short-Time Fourier Transform (STFT) is a time-frequency representation used to compute the DFT of overlapping windowed segments of a signal. In practice, 
 however, the STFT uses the FFT as this is more computationally efficient.
-This is accomplished by multiplying the signal by a windowing function so that only a small portion of the signal is nonzero \cite{dolson1986phase}. 
-Mathematically, it is similar to equation $(1)$ but with a few modifications: the addition of a windowing function, the domain of the input signal, 
-and how the output is interpreted. Below is the STFT: 
+The technique multiplies the input signal by a windowing function so that only a small portion of the signal is analyzed \cite{dolson1986phase}.
+In order to move the window and isolate different chunks of the input signal, the samples are offset by a hop size. 
+The hop size is determined by how much the successive STFTs should overlap.
+The STFT is given by: 
+%Mathematically, it is similar to Equation $(1)$ but with an additional window function
+
+% but with a few modifications: the addition of a windowing function, the domain of the input signal, 
+% and how the output is interpreted. Below is the STFT: 
 \begin{align}
-  X[m,k] = \sum_{n=0}^{N-1} x[n+kH]w[n]e^{-2\pi jmn/N}
+  X[m,k] = \sum_{n=0}^{N-1} x[n+kH]w[n]e^{-2\pi jmn/N}.
 \end{align}
-Where $X[m, k]$ is the 2-dimensional output array indexed by both frequency bin and time frame and $x[n + kH]$ is the section of the input signal 
-determined by frame index and hop size \cite{royer2019pitch}. The outcome of the STFT is a representation that transforms a signal from the time 
-domain to the frequency domain. In this form, the signal's frequency components can be systematically modified and recombined to reconstruct a new signal. 
+The output of the STFT, $X[m, k]$, is a two dimensional array indexed by both frequency bins $m$ and frame index $k$. The section of the input signal is given by $x[n + kH]$, where
+ $kH$ determines the position of isolated window frame. 
+%The outcome of the STFT is a representation that transforms a signal from the time 
+% domain to the frequency domain. In this form, the signal's frequency components can be systematically modified and recombined to reconstruct a new signal. 
 
-
-Since the STFT only computes the DFT of a particular section of a given signal, it must be shifted in order to process another section of the signal. 
-The amount in which the STFT is shifted is known as the \textit{Hop Size}, denoted as $H$. The hop size is determined by how much the successive STFTs should overlap, 
-more on this in Section 4.3. Typical hop sizes include $75\%$, $50\%$, $33.3\%$, and $20\%$ overlap \cite{degotzen2000traditional}.  
-Lastly, just as the DFT has an inverse, so to does the STFT. However, instead of reconstructing the entire signal, the inverse STFT only reconstructs a particular
-chunk of a signal. This is especially useful in reconstructing a signal after modifying it in the frequency domain. 
+% Since the STFT only computes the DFT of a particular section of a given signal, it must be shifted in order to process another section of the signal. 
+% The amount in which the STFT is shifted is known as the \textit{Hop Size}, denoted as $H$. The hop size is determined by how much the successive STFTs should overlap, 
+%more on this in Section 4.3. 
+In practice, typical hop sizes are $75\%$, $50\%$, $33.3\%$, and $20\%$ overlap. The amount of overlap introduces a tradeoff between time resolution and frequency resolution \cite{royer2019pitch}. 
+Lastly, the STFT is also invertible. However, instead of reconstructing the entire signal all at once, the inverse STFT (ISTFT) individually converts the signal frames back to the time domain 
+ . This is especially useful in phase vocoder based pitch shifter, as a signal can be modified in the frequency domain and then subsequently transformed back to the time domain. 
 
 
 \section{Related Works}
 
-\subsection{Classical Phase Vocoder Approaches}
+%\subsection{Classical Phase Vocoder Approaches}
 Pitch-shifting has been approached by a number of time--frequency methods. 
 Early methods, such as Dolson's (1986), employed the use of the Short-Time 
 Fourier Transform in conjunction with the phase vocoder algorithm. 
@@ -218,7 +224,7 @@ this classical time-scale modification framework treats spectral bins independen
 which can lead to phase incoherence and unwanted artifacts. 
 These limitations motivated subsequent refinements to the phase vocoder algorithm.
 
-\subsection{Phase Vocoder Optimizations}
+%\subsection{Phase Vocoder Optimizations}
 
 Unlike the original process chain described by Dolson (1986), 
 which applies a uniform scaling factor to all spectral components, 
@@ -238,18 +244,17 @@ value can be derived from the frequency bins across two frames and when added to
 approximation the accuracy of the frequency estimation is increased \cite{lim2007phasevocoder}.
 
 
-\subsection{Alternative Pitch-Shifting Methods}
+%\subsection{Alternative Pitch-Shifting Methods}
 
 The prior sections highlight the phase vocoder approach to pitch-shifting, a frequency-domain algorithm that 
 converts a signal from the time domain to the frequency domain to compute the pitch shift. An alternative approach uses time-scale modification (TSM) algorithms,
- which operate entirely in the time domain \cite{rai2019analysis}. 
- A common algorithm belonging to the TSM family is the Overlap-Add (OLA) algorithm \cite{royer2019pitch}.
+which operate entirely in the time domain \cite{rai2019analysis}. 
+A common algorithm belonging to the TSM family is the Overlap-Add (OLA) algorithm \cite{royer2019pitch}.
 
 The idea behind these algorithms is that pitch shifting and time scaling are essentially the same; meaning if you have one, 
 either a pitch shifter or time scaler, then you effectively have the other. OLA makes use of this paradigm. The algorithm first partitions the input signal into frames, much like the STFT. 
 Then, if the goal is to pitch down the signal, when resynthesizing the signal it is constructed in such a way that extra space is added between the reconstructed frames, increasing the length of the signal. 
 On the contrary, if the goal is to make the signal's pitch higher, then the algorithm reconstructs the signal in such a way where the space between contiguous frames is reduced, effectively shortening the signal's length \cite{royer2019pitch}.
-
 Since TSM algorithms operate in the time domain and thus change the input signal's duration, either lengthening or shortening it, these algorithms must incorporate a resample step in order to convert the modified signal back to the original signal's duration \cite{rai2019analysis}.
 Thus, these alternative algorithms are viable options; however, purely TSM-based algorithms are often outperformed by frequency-based algorithms \cite{royer2019pitch}.
 
