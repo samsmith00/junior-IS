@@ -468,8 +468,18 @@ the pitch shift range up to 12 semitones in either direction (pitch up or pitch 
  \end{center}
 \end{figure}
 
-On hovering the mouse above the dial, the semiton the dial is set to is shown to the user, valid lables the integers spanning the range [-12, 12].
+On hovering the mouse over the dial, the amount of shift is displayed to the user. The range of the dial is set to 
+[-12, 12] inclusive, which allows for the signal to be shifted by an octave in either direction. 
 
+Results from the offline 
+tests indicated that the audio track had no audible loss of resolution or clarity when the signal was shifted. Shifting the track up and down did not introduce any additional artifacts, which typically
+manifest as clicks and pops in the audio. Due to time restrictions, however, a more thorough analysis of the signal was not completed. 
+To test the audio plugin in the real-time environment, 
+both a high gain and clean guitar tone were used in a real-time setting. Each effect was also accompanied by additional effects, such as reverb and delay, which were applied to the signal by the amp, after Reaper applied 
+the pitch shifter. The results indicate a drop in audio quality from the offline tests. The phasiness effect, a smearing of the audio signal \cite{juillerat2010lowlatencypitch}, was more noticeable in the high gain test. Additionally, 
+this particular implementation is better at shifting monophonic signals, one note at a time, than polyphonic signals (chords). This limitation was noticeable in the clean guitar test, where two notes are played at the same time resulting 
+in an audible drop in sound quality. Similarly to the offline tests, more sophisticated techniques were not employed to measure the quality of the signal due to time constraints. Thus, moving forward, techniques from \cite{rai2019analysis} could be 
+implemented to analyze the quality of the shifted signal. 
 
 
 %An exemplary figure is shown in Figure~\ref{fig:dijkstra}. Any time a figure is used, it must have a capation and be directly referred to and discussed in the text.
