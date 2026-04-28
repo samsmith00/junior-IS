@@ -357,7 +357,7 @@ and we now have a method to more accurately compute the frequency of our signal.
 \subsubsection{Pitch Shifting and Synthesizing a Signal}
 Now that we have calculated a more accurate frequency estimation, pitch shifting the signal 
 involves scaling the frequency $b[n]$ by a pitch shift factor $R$. In doing so, we compute a new fractional
-bin $b_s[n]$ where $b_s[n] = Rb[n]$. After that,  we calculate the new bin number rounded to the nearest integer: $k' = \text{floor}(Rk + 0.5)$ 
+bin $b_s[n]$, where $b_s[n] = Rb[n]$. After that,  we calculate the new bin number rounded to the nearest integer: $k' = \text{floor}(Rk + 0.5)$ 
 which will contain the shifted frequency. 
 The final part of the modification step is calculating a new phase value for the shifted frequency. The new phase 
 value ensures the modified signal is reconstruced correctly and does not introduce any discontinuities at the signal
@@ -383,10 +383,10 @@ where $\phi_s[n]$ is the actual phase of this bin at the current hop.
 
 \subsection{Synthesis}
 
-Once the signal frame has been modified and a new phase value hase been calculated, the IFFT converts the signal back to the time domain. Then the output is reconstructed using
-the Constant Overlap-Add (COLA) paradigm. A detailed explanation of COLA can be found here \cite{smith2011sasp}. The key idea is that 
-if samples in the window function, offset by $H$, add to a constant $C$, then the window possesses the "Constant Overlap-Add Property" \cite{smith2011sasp}. The 
-mathematical expression below demonstrates the COLA property: 
+Once the signal frame has been modified and a new phase value has been calculated, the IFFT converts the signal back to the time domain. The resulting signal segment is then reconstructed using
+the Constant Overlap-Add (COLA) paradigm. A detailed explanation of COLA can be found here \cite{smith2011sasp}. The principal idea is that 
+if samples in the window function, offset by $H$, add to a constant $C$, then the window possesses the ``Constant Overlap-Add Property" \cite{smith2011sasp}. The 
+COLA property is defined mathematically as: 
 \begin{align}
   \sum_{m=-\infty}^{\infty} w(n - mH) = 1, \quad \forall n \in \mathbb{Z}
 \end{align}
@@ -395,31 +395,39 @@ and Figure~\ref{fig:cola-property} below graphically shows the COLA Property.
 \begin{figure}[H] 
 \begin{center}
   \includegraphics[width=8cm]{imgs/colaProp50.png} 
+  \includegraphics[width=8cm]{imgs/cola75.png}
   \includegraphics[width=8cm]{imgs/colaProp40.png}
-  %\includegraphics[width=8cm]{imgs/cola75.png}
-\caption{Illustration of the Constant Overlap-Add (COLA) property. The first graph demonstrates that a 50\% overlap satisfies the COLA property. The second graph uses a 60\% overlap which does not satisfy the COLA property.}
+\caption{Illustration of the Constant Overlap-Add (COLA) property. The first graph demonstrates that a 50\% overlap satisfies the COLA property. The second graph uses a 75\% overlap which does posses the COLA property. The third graph uses a 60\% overlap which does not satisfy the COLA property}
 \label{fig:cola-property}
  \end{center}
 \end{figure}
-
+The first plot in Figure~\ref{fig:cola-property} demonstrates that the Hanning window with a $50\%$ overlap possesses the COLA property. The red line 
+represents the sum of the Hanning window samples offset by a hop size of 512 samples. Once the five Hanning windows start to overlap, their samples sum to a
+constant value. The last plot (second row) demonstrates that a $60\%$ overlap does not posses the COLA property. Notice that once the Hanning windows overlap, the samples 
+do not sum to a constant value.
 This project employs the Hanning window function with a $75\%$ overlap. Even though this amount of 
-overlap does not perfectly possess the COLA Property, the benefit of using a Hanning window with a $75\%$ overlap outweighs the negatives. 
+overlap does not yield perfect resynthesis, it is regarded as the standard amount of overlap for modern phase vocoders \cite{barry2008time}.
 As seen in section 4.3, the phase vocoder uses previous phase values to more accurately estimate a signal's frequency. Thus, by having a larger overlap, 
 the phase vocoder more frequently analyzes the input signal which results in more accurate phase calculations \cite{barry2008time}. 
 
-% \begin{itemize}
-%   \item Talk about why this hanning window size is used, good frequency resolution, no problem with reconstructsion etc.
-% \end{itemize}
+Figure~\ref{fig:synthesis} below demonstrates the synthesis step.
 
+\begin{figure}[H] 
+\begin{center}
+  \includegraphics[width=8cm]{imgs/synthesis.png} 
+\caption{Illustration of the synthesis step from \cite{sethares_phasevocoder}}
+\label{fig:synthesis}
+ \end{center}
+\end{figure}
 
-% To prove it possesses the COLA property we can graph several Hanning window functions 
-% with a $75\%$ overlap and their corresponding overlap value. Figure 2 shows that by graphing five Hanning window functions with a $75\%$ overlap satisfies the COLA property. Notice a $66.67$\% ($\frac{2}{3}$) overlap 
-% does not work as the sum of the samples fluctuates.
-
-To reconstruct the output signal, the values from the inverse STFT are first added into an output buffer. This buffer serves as temporary storage; it is not the final synthesized audio signal. 
+As seen in Figure~\ref{fig:synthesis}, the time domain frames are recombined using the overlap-add technique to produce a final signal. 
+To reconstruct the output signal, the time domain samples from the ISTFT are first added into an output buffer. This buffer serves as temporary storage; it is not the final synthesized audio signal. 
 The output buffer is necessary because, due to overlapping windows ensured by the COLA property, certain samples are calculated as the sum of multiple windows. Once the samples have been correctly added in the buffer,
 a write pointer is used to sequentially read them to the output audio buffer. 
 
+
+% As seen in Figure~\ref{fig:synthesis}, the ISTFT converts the pitch shifted signal frames back to the time domain from the frequency domain. Then 
+% the signal frames are combined using the overlap add technique producing a new signal.  
 
 
 \section{Methodology}
