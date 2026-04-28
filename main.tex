@@ -303,52 +303,50 @@ frequency domain, such as pitch shifting.
 
 
 \subsection{Modification}
-% In this section I will explain how the phase vocoder is used the phase information obtained from the DFT to perform a more accurate
-% frequency transformation. Additionally, the phase information is used to better reconstruct the signal in the resynthesis step.
-In this section, I will explain how the phase vocoder is used to modify a given input audio signal. After the modification step, 
-the audio signal will have been successfully pitch shifted in the frequency domain. 
-
+In this section, I will explain how the phase vocoder is used to modify an audio signal.
 With the completion of the analysis step, the 
-audio signal has been transformed into the frequency domain. The signal is now represented as linearly spaced frequency bins that 
-range from 0 to $N/2 + 1$. Each bin $k$ is a complex number of the form $a + jb$ that represents a specific analysis frequency \cite{mcfee_dstbook}. 
+audio signal has been transformed into the frequency domain. The signal is now represented as linearly spaced frequency bins that correspond to frequencies ranging
+from 0 to $f_s/2$, the Nyquist frequency. The bins above the Nyquist frequency are not included as they contain redundant information.
+Each bin $k$ is a complex number of the form $a + jb$ that represents a specific analysis frequency \cite{mcfee_dstbook}. 
 An analysis frequency can be thought of as sinusoid that completes an integer number of cycles over an $N$ sample window. Thus, each frequency bin $k$ 
 measures the contribution of a sinusoid at frequency $\frac{k}{N} * f_s$, where $f_s$ is the sampling rate \cite{mcfee_dstbook}. 
 
-One shortcoming of the FFT however, is that it is possible for signals frequencies to fall between frequency bins. For example, a typical sampling rate might be $44100$Hz, 
+One shortcoming of the FFT, however, is that a signal's fundamental frequencies may fall between frequency bins. For example, a typical sampling rate might be $44100$Hz, 
 and let our window size be $1024$ samples. To calculate the spacing between frequences we compute: 
 \begin{align*}
   \Delta f = \frac{f_s}{N} = \frac{44100}{1024} \approx 43 \text{Hz}
 \end{align*} 
-Therefore, at bin 0 the analysis frequency is 0Hz, at bin 1 its 43Hz at bin 2 its 86Hz and so on. If a signal's frequency falls 
-between one of these bins, its energy is distributed accross all other bins and the actual frequency becomes obscured \cite{lim2007phasevocoder}.
-The energy distribution manifests itself as spectral leakage and as seen in Section 2.2 a windowing function helps to reduce the leakage. 
+Therefore, at bin 0 the analysis frequency is 0Hz, at bin 1 it is 43Hz at bin 2 it is 86Hz and so on. If a signal's frequency falls 
+between one of these bins, its energy is distributed accross multiple nearby bins and the actual frequency is unable to be represented by a single bin \cite{lim2007phasevocoder}.
+The energy distribution manifests itself as spectral leakage and as seen in Section 2.1 a windowing function helps to mitigate this problem. 
 
 \subsubsection{Computing a More Accurate Frequency}
 To more accurately calculate a  signal frame's frequency, the phase vocoder employs the use of the frame's phase information from the FFT.
-The core principle behind this computation is that frequency is the derivative of phase. Thus, by using a signal's phase from two different hops
+The core principle behind this computation is that frequency is the derivative of phase. Thus, by using a signal's phase information from two different hops
 the exact frequency of the signal can be calculated. The equation below mathematically demonstrates the frequency of a signal $\omega$ written as a
 first order derivative in terms of phase $\phi$: 
 \begin{align}
   \omega[n] = \frac{\phi[n] - \phi[n-H]}{H}.
 \end{align} 
-Now, we can rearrage Equation 5 to isolate the phase difference:
+Now, we can rearrange Equation 4 to isolate the phase difference:
 \begin{align}
-  \phi[n] - \phi[n-H] &= \omega[n] H = \frac{2\pi k H}{N}. 
+  \phi[n] - \phi[n-H] &= \omega[n] \cdot H = \frac{2\pi k H}{N}. 
 \end{align}
-Thus, the phase shift for a sinusoid with a frequency exactly matching a frequency bin over one hop size is given by Equation 7. 
+Thus, the phase shift for a sinusoid with a frequency exactly matching a frequency bin over one hop size is given by Equation 5. 
 What we now have is a basis to compare the actual signal frequency to. Computing the adjustment factor, also referred to as the phase
 remainder $\phi_r$, we can subtract the ideal phase from the actual observed phase \cite{lim2007phasevocoder}: 
 \begin{align}
   \phi_r[n] = (\phi[n] - \phi[n-H]) - \frac{2\pi k H}{N}.
 \end{align}
-In order to keep from getting negative frequenceis, we must wrap $\phi_r$ between $(-\pi, \pi]$ \cite{reiss2014audioeffects}. Once the phase is wrapped, 
-we can calculate the the deviation of the observed frequency from the bin frequency: 
+In order to guarantee that the phase vocoder computes the smallest phase deviation, we must wrap $\phi_r$ between $(-\pi, \pi]$. Once the phase is wrapped, 
+we can calculate the deviation of the observed frequency from the bin frequency: 
 \begin{align}
   \omega[n] - \omega_k &= \frac{\text{wrap}(\phi_r[n])}{H}, \text{ and} \\
-  \omega[n] &= \frac{\text{wrap}(\phi_r[n])}{H} + \omega_k. 
+  \omega[n] &= \frac{\text{wrap}(\phi_r[n])}{H} + \omega_k 
 \end{align}
-We now have an equation that computes the exact frequency of the sinusoid. Due to operating in a real-time enviornment however, 
-it is more computationaly efficient to compute a fractionl FFT bin number, which represents the frequency in terms of where it would
+where $\omega_k$ is the frequency of the $k$th bin. 
+We now have an equation that computes the exact frequency of the sinusoid. Due to operating in a real-time environment, however, 
+it is more computationally efficient to compute a fractional FFT bin number; a way to represent a frequency in terms of where it would
 fall if the bins had infinite resolution. To compute the fractional FFT bin number, we only need to scale Equation 9 by a factor of $2\pi/N$
 since $\omega[n] = \frac{2\pi k}{N}$. Doing so yields: 
 \begin{align}
@@ -357,7 +355,7 @@ since $\omega[n] = \frac{2\pi k}{N}$. Doing so yields:
 and we now have a method to more accurately compute the frequency of our signal.
 
 \subsubsection{Pitch Shifting and Synthesizing a Signal}
-Now that we have a more accurate estimation of the frequency of the audio signal, pitch shifting the signal 
+Now that we have a calculated a more accurate frequency estimation, pitch shifting the signal 
 is as simple as scaling the frequency $b[n]$ by a pitch shift factor $R$. In doing so, we compute a new fractional
 bin $b_s[n]$ where $b_s[n] = Rb[n]$. Finally we calculate the new bin number $k' = \text{floor}(Rk + 0.5)$ 
 that will contain the shifted frequency. 
