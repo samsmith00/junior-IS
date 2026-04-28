@@ -436,10 +436,10 @@ Its integrated build system allows projects to target multiple plugin formats, s
 real-time audio plugins. Additionally, JUCE provides a wide range of built-in libraries that support common audio processing tasks, as well as tools for creating graphical user interfaces (GUIs).
 
 Under JUCE's framework, the pitch shifter processes contiguous blocks of an input signal. The signal is passed to the pitch shifter using JUCE's PluginProcessor.ProcessBlock() method. In this method, 
-the audio buffer (block of signal) is divided into its respective channels. Then for each channel, its audio samples (discrete data values) are passed to the pitch shifter for futher processing.
+the audio buffer (block of signal) is divided into its respective channels. Then for each channel, its audio samples (discrete data values) are passed to the pitch shifter for further processing.
 Once in the scope of the pitch shifter, each sample in the channel data is stored in an input buffer. Once this buffer has 1024 samples, the buffer will be windowed and the FFT will be computed to 
-obtain the signal's magnitude and phase information accrosse frequency bins. To pitch shift the more accurate frequency estimation, a pitch factor is used to scale the frequency components of the signal. 
-Once modified the signal is reconstructed by using prior phase information to enforce continuity accross frames, and the inverse STFT is computed to convert the signal back to the time domain. JUCE then takes 
+obtain the signal's magnitude and phase information across frequency bins. To pitch shift the more accurate frequency estimation, a pitch factor is used to scale the frequency components of the signal. 
+Once modified the signal is reconstructed by using prior phase information to enforce continuity across frames, and the inverse STFT is computed to convert the signal back to the time domain. JUCE then takes 
 the modified sample data and passes it back to the DAW where it can then be sent to speakers, or additional plugins for further processing. 
 
 % \begin{itemize}
@@ -452,6 +452,21 @@ the modified sample data and passes it back to the DAW where it can then be sent
 % \end{itemize}
 
 \section{Results}
+To accommodate the pitch shifter audio plugin, a simple dial was constructed using the JUCE framework's built in GUI library. The dial allows the user to control
+the pitch shift range up to 12 semitones in either direction (pitch up or pitch down). Figure~\ref{fig:GUI} below is the audio plugin loaded into a DAW. 
+
+\begin{figure}[H] 
+\begin{center}
+  \includegraphics[width=8cm]{imgs/GUI.png} 
+\caption{Illustration of the audio plugin dial}
+\label{fig:GUI}
+ \end{center}
+\end{figure}
+
+On hovering the mouse above the dial, the semiton the dial is set to is shown to the user, valid lables the integers spanning the range [-12, 12].
+
+
+
 %An exemplary figure is shown in Figure~\ref{fig:dijkstra}. Any time a figure is used, it must have a capation and be directly referred to and discussed in the text.
 \begin{itemize}
   \item A successful pitch-shift audio plugin will produce a shifted audio signal with minimal artifacts introduced
