@@ -491,17 +491,12 @@ implemented to analyze the quality of the shifted signal.
 
 
 \section{Conclusion}
-This project effectively demonstrates a working implementation of a phase vocoder based ptich shifter. It is able to both pitch up and down an octave (12 semitones), while maintaining 
+This project effectively demonstrates a working implementation of a phase vocoder based pitch shifter. It is able to both pitch up and down an octave (12 semitones), while maintaining 
 reasonable audio clarity and introducing minimal artifacts. The solution follows the phase vocoder paradigm: converting the signal from the time domain to the frequency domain, using phase information obtained from 
 this step to improve frequency estimations, modifying the signal in the frequency domain, and finally converting the signal back to the time domain.
-
-While this implementation is good at shifting monophonic signals, it struggles at accurately pitch shifting polyphonic signals (multiple notes at once, chords). More advanced pitch shifters
-employ techniques such as peak-locking, zero-padding and advanced phase techniques \cite{royer2019pitch}. One notable future improvement would be to examine alternative methods of phase
-reconstruction that result in a more complete signal after signal modification.
-
-\begin{itemize}
-  \item need some closing sentence
-\end{itemize}
+While this implementation is good at shifting monophonic signals, it struggles at accurately pitch shifting polyphonic signals (multiple notes at once and chords). More advanced pitch shifters
+employ techniques such as peak-locking, zero-padding and advanced phase techniques \cite{royer2019pitch}. Dispite these limitations, this implementation has been shown to operate within the confines of 
+a real-time environment while producing an acceptable audio quality. Future work could focus on improving polyphonic performance and employing quantitative measures such as the zero crossing rate to more rigorously evaluate output quality 
 
 
 \bibliographystyle{acm}
