@@ -355,16 +355,15 @@ since $\omega[n] = \frac{2\pi k}{N}$. Doing so yields:
 and we now have a method to more accurately compute the frequency of our signal.
 
 \subsubsection{Pitch Shifting and Synthesizing a Signal}
-Now that we have a calculated a more accurate frequency estimation, pitch shifting the signal 
-is as simple as scaling the frequency $b[n]$ by a pitch shift factor $R$. In doing so, we compute a new fractional
-bin $b_s[n]$ where $b_s[n] = Rb[n]$. Finally we calculate the new bin number $k' = \text{floor}(Rk + 0.5)$ 
-that will contain the shifted frequency. 
-
-The final part of the modification step is to calculate a new phase value for the shifted frequency. The new phase 
-value ensures that the modified signal is reconstruced correctly and does not introduce any discontinuities at the signal
-frame's edges \cite{barry2008time}. The calcuation is similar to Equation 6 with a few adjustments. To compute the new phase
-value, we are only concerned with how much the phase has changed from one hop to the next, thus we first must compute the phase
-remainder of our new frequency: 
+Now that we have calculated a more accurate frequency estimation, pitch shifting the signal 
+involves scaling the frequency $b[n]$ by a pitch shift factor $R$. In doing so, we compute a new fractional
+bin $b_s[n]$ where $b_s[n] = Rb[n]$. After that,  we calculate the new bin number rounded to the nearest integer: $k' = \text{floor}(Rk + 0.5)$ 
+which will contain the shifted frequency. 
+The final part of the modification step is calculating a new phase value for the shifted frequency. The new phase 
+value ensures the modified signal is reconstruced correctly and does not introduce any discontinuities at the signal
+frame's edges \cite{barry2008time}. The calculation is similar to Equation 9 with a few adjustments. To compute the new phase
+value, we are only concerned with how much the phase has changed from one hop to the next. Thus we first compute the phase
+remainder of the new frequency: 
 \begin{align}
   \phi_{rs}[n] = \frac{2\pi H(b_s[n] - k')}{N}.
 \end{align}
@@ -372,8 +371,10 @@ Next, we add the $\phi_{rs}$ to the phase of the shifted signal that perfectly f
 \begin{align}
  \frac{2\pi Hb_s[n] - 2\pi H k'}{N}  + \frac{2\pi k' H}{N} = \frac{2\pi H b_s[n]}{N}.
 \end{align}
-Recall that $b_s[n]$ is the fractional bin index, hence we have now computed the phase of the actual frequency of the input signal frame. We 
-can now add the previous hops phase to the result of Equation 11 to obtain: 
+Recall that $b_s[n]$ is the fractional bin index, hence the result of Equation 11 is the phase of the signal frame's frequency estimation. 
+Finally, by adding this frame's phase to the previous hop's phase: $\phi_s[n-H]$, where $\phi_s[n-H]$ is the phase of the same bin at the previous hop, we compute the actual phase of 
+the current bin at the current hop. This ensures that the phase evolves continuously across frames. 
+This is mathematically defined as: 
 \begin{align}
   \phi_s[n] = \text{wrap}\left(\phi_s[n-H] + \frac{2\pi H b_s[n]}{N}\right)
 \end{align}
