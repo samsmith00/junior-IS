@@ -442,6 +442,11 @@ obtain the signal's magnitude and phase information across frequency bins. To pi
 Once modified the signal is reconstructed by using prior phase information to enforce continuity across frames, and the inverse STFT is computed to convert the signal back to the time domain. JUCE then takes 
 the modified sample data and passes it back to the DAW where it can then be sent to speakers, or additional plugins for further processing. 
 
+To test the audio plugin's shifting capabilities, it was used in an offline and real-time environment. In the offline environment, a pre-recorded guitar track
+was uploaded to a Reaper, the DAW, where the pitch shifter was selected as the only plugin for the track. Throughout the track's duration, the plugin was used to
+shift the audio track up to an octave in either direction. To test the audio plugin in a real-time environment, an electric guitar and guitar amplifier were connected to Reaper via an audio interface 
+and the pitch shifter was loaded as an effect in Reaper. The guitar signal first passed into Reaper where the pitch shift effect was applied, then out to the amplifier where the sound was played.  
+
 % \begin{itemize}
 %   \item I built a pitch shifting audio plugin
 %   \item My goals were to build a real-time, polyphonic pitch shifting plugin that could pitch shift up to 5 semitones (downtune and uptune)
