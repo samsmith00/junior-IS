@@ -189,7 +189,7 @@ The STFT is given by:
 % but with a few modifications: the addition of a windowing function, the domain of the input signal, 
 % and how the output is interpreted. Below is the STFT: 
 \begin{align}
-  X[m,k] = \sum_{n=0}^{N-1} x[n+kH]w[n]e^{-2\pi jmn/N}.
+  X[m,k] = \sum_{n=0}^{N-1} x[n+mH]w[n]e^{-2\pi jmn/N}.
 \end{align}
 The output of the STFT, $X[m, k]$, is a two dimensional array indexed by both frequency bins $m$ and frame index $k$. The section of the input signal is given by $x[n + kH]$, where
  $kH$ determines the position of isolated window frame. 
@@ -345,7 +345,7 @@ we can calculate the deviation of the observed frequency from the bin frequency:
   \omega[n] &= \frac{\text{wrap}(\phi_r[n])}{H} + \omega_k 
 \end{align}
 where $\omega_k$ is the frequency of the $k$th bin. 
-We now have an equation that computes the exact frequency of the sinusoid. Due to operating in a real-time environment, however, 
+We now have an equation that computes a more accurate frequency estimation of the sinusoid. Due to operating in a real-time environment, however, 
 it is more computationally efficient to compute a fractional FFT bin number; a way to represent a frequency in terms of where it would
 fall if the bins had infinite resolution. To compute the fractional FFT bin number, we only need to scale Equation 9 by a factor of $2\pi/N$
 since $\omega[n] = \frac{2\pi k}{N}$. Doing so yields: 
@@ -499,6 +499,22 @@ employ techniques such as peak-locking, zero-padding and advanced phase techniqu
 a real-time environment while producing an acceptable audio quality. Future work could focus on improving polyphonic performance and employing quantitative measures such as the zero crossing rate to more rigorously evaluate output quality 
 
 
+\appendix 
+\section{Use of Generative Artificial Intelligencey}
+
+Generative Aritifical Intelligence was minimally used and restricted to a supporting cast throughout the development and writing of this Junior Independent Study.
+The areas in which Artifical Intellligence affected were brainstorming, small content clarifications, sentence revisions (such as grammer and spellcheck), and debugging assistance. 
+At no point was Generative AI employed to construct original ideas, develope technical features, or write paragraphs and sections. 
+
+Throughout the developmet process, ChatGPT (OpenAI's GPT-5.4 model) and Claude Sonnet 4.6 were used to serve as assistances when consulting with JUCE's documentation and new digital signal 
+processing concepts. When inquiring about JUCE's documentation, a typical interaction would involve asking a clarification question; such as explaining a function signature, explaining an unfamilary
+cpp paradigm, or clarifying the associated DSP concept. Additionally, while learning about the field of digital signal processing (DSP), and the maths accompaning the topic, I would prompt the LLMs asking for 
+additional reasources that I may have overlooked during my preliminary research. 
+
+
+
+
+\newpage
 \bibliographystyle{acm}
 \bibliography{bibliography.bib}
 
