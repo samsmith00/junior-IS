@@ -1,5 +1,37 @@
-# Pitch-Shifting Plugin 
-This pitch-shifting audio plugin will modify a guitar’s pitch by digitally transforming the frequency content of the incoming audio signal in real time.
+# Phase Vocoder Pitch Shifter
+
+A real-time audio pitch shifting plugin implemented using a phase vocoder.  
+This project demonstrates frequency-domain audio processing using the Short-Time Fourier Transform (STFT).
+
+## Overview
+
+This project implements a pitch shifting algorithm based on the phase vocoder technique.  
+The input audio signal is transformed into the frequency domain, modified by scaling frequencies, and then reconstructed back into the time domain.
+
+## How It Works
+
+The processing pipeline consists of three main steps:
+
+1. **Analysis**
+   - The input signal is segmented into overlapping frames
+   - A Hann window is applied to each frame
+   - The Short-Time Fourier Transform (STFT) is used to obtain frequency information
+
+2. **Modification**
+   - Frequencies are scaled by a pitch shift factor
+   - Phase is adjusted between frames to maintain continuity and reduce artifacts
+
+3. **Synthesis**
+   - The modified signal is converted back to the time domain using the inverse STFT
+   - Overlap-add is used to reconstruct the final output signal
+
+## Implementation
+
+This project was developed in **C++** using the **JUCE** framework.  
+JUCE provides the audio processing infrastructure and plugin architecture, enabling real-time DSP and integration with digital audio workstations (DAWs).
+
+
+
 
 ## Feature Calendar
 
